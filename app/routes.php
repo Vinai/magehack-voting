@@ -15,3 +15,7 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+
+Route::get('oauth2/{provider}', 'OauthController@index');
+Route::get('oauth2callback/', 'OauthController@callback');
