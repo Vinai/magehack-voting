@@ -11,11 +11,17 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+Route::get('/',  array('as' => 'project.index', 'uses' => 'ProjectController@index'));
 
 
 Route::get('oauth2/{provider}', 'OauthController@index');
-Route::get('oauth2callback/', 'OauthController@callback');
+
+Route::get('login', array('as' => 'login', function () {
+    return Redirect::to('oauth2/google');
+}))->before('guest');
+
+Route::get('logout', array('as' => 'logout', function () {
+    Auth::logout();
+    return Redirect::to('/');
+}))->before('auth');
+
