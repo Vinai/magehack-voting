@@ -32,9 +32,24 @@ class OauthController extends BaseController {
             $message = 'Your unique Google user id is: ' . $result['id'] . ' and your name is ' . $result['name'];
             echo $message. "<br/><pre>";
 
-            //Var_dump
-            //display whole array().
-            dd($result);
+            $user = User::where('email', '=',  $result['email'])->first();
+
+            if($user){
+                echo "Welcome back";
+                $user->google_accesstoken = $token->getAccessToken();
+                $user->save();
+
+            }else {
+                $user = new User;
+                $user->email = $result['email'];
+                $user->firstname = $result['given_name'];
+                $user->lastname = $result['family_name'];
+                $user->google_accesstoken = $token->getAccessToken();
+
+                $user->save();
+            }
+            Auth::login($user);
+            return Redirect::intended('/');
 
         }
         // if not ask for permission first
