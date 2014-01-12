@@ -57,8 +57,8 @@
             <p>You need to be logged in to post new project ideas and vote. </p>
         </div>
     @else
-        <div class="login message">
-            <p>Welcome {{Auth::user()->firstname }}</p>
+        <div class="alert alert-success">
+            <p>You successfully logged in as {{Auth::user()->firstname }} {{Auth::user()->lastname }}</p>
         </div>
     @endif
 
