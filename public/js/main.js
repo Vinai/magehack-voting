@@ -16,3 +16,10 @@ function ProjectsController($scope,$http){
         $http.post('projects', project);
     }
 }
+
+function VotesController($scope,$http){
+
+    $http.get('/project/votes/' + $scope.project.id).success(function(votes) {
+        $scope.projectVotes = votes;
+    });
+}

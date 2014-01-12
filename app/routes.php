@@ -35,3 +35,13 @@ Route::get('logout', array('as' => 'logout', function () {
 Route::get('projects', function(){
     return Project::all();
 });
+
+Route::get('project/votes/{id}', function($id){
+    $collection = DB::table('votes')
+        ->join('users', 'users.id', '=', 'votes.user_id')
+        ->where('votes.project_id', '=', $id)
+        ->select('votes.id', 'votes.user_id', 'users.avatar_url', 'users.github_username')
+        ->get();
+    return $collection;
+});
+

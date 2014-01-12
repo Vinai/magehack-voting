@@ -3,7 +3,18 @@
     margin-top: 10px;
     margin-right: 10px;
 }
-
+.panel-participants{min-height: 60px}
+.participants {float:left; display: block; width: 100%; margin: 0;padding:0;}
+.participants>li {
+    float: left;
+    position: relative;
+    display: block;
+    padding-right: 5px;
+}
+.participants>li img{
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;}
 /* Social Buttons */
 
 .btn-social{position:relative;padding-left:44px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.btn-social :first-child{position:absolute;left:0;top:0;bottom:0;width:32px;line-height:34px;font-size:1.6em;text-align:center;border-right:1px solid rgba(0,0,0,0.2)}

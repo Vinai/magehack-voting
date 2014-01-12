@@ -13,7 +13,16 @@
         <div class="panel-body">
             <p>@{{ project.description }}</p>
         </div>
-
+        <div class="panel-heading panel-participants">
+            <ul class="participants" ng-controller="VotesController">
+<!--                <li><h3 class="panel-title">Participants: </h3></li>-->
+                <li ng-repeat="vote in projectVotes">
+                    <a>
+                        <img height="40" src="@{{ vote.avatar_url }}" width="40">
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 

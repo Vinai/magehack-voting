@@ -1,18 +1,18 @@
 <?php
 
-class Project extends Eloquent {
+class Vote extends Eloquent {
 	protected $guarded = array();
-    protected $softDelete = true;
 
 	public static $rules = array();
+
 
     public function user()
     {
         return $this->belongsTo('User');
     }
 
-    public function votes()
+    public function project()
     {
-        return $this->hasMany('Vote');
+        return $this->belongsTo('Project');
     }
 }
