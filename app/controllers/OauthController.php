@@ -49,7 +49,9 @@ class OauthController extends BaseController {
                 $user->save();
             }
             Auth::login($user);
-            return Redirect::intended('/');
+            return Redirect::intended('/')
+                ->with('message', 'You Successfully Logged in')
+                ->with('message-type', 'success');
 
         }
         // if not ask for permission first

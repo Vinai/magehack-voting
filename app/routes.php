@@ -20,6 +20,7 @@ Route::group(array('before'=>'auth'), function() {
     Route::resource('project', 'ProjectController');
 
 });
+
 Route::get('oauth2/{provider}', 'OauthController@index');
 
 Route::get('login', array('as' => 'login', function () {
