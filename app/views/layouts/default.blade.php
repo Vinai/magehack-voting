@@ -47,19 +47,9 @@
 <div class="container">
 
     @if (Session::has('message'))
-    <div class="flash alert">
+    <div class="flash alert alert-{{Session::get('message-type')}}">
         <p>{{ Session::get('message') }}</p>
     </div>
-    @endif
-
-    @if (!Auth::check())
-        <div class="alert alert-info">
-            <p>You need to be logged in to post new project ideas and vote. </p>
-        </div>
-    @else
-        <div class="alert alert-success">
-            <p>You successfully logged in as {{Auth::user()->firstname }} {{Auth::user()->lastname }}</p>
-        </div>
     @endif
 
     @yield('main')

@@ -1,6 +1,18 @@
-function ProjectsController($scope){
-    $scope.projects = [
-        { title: 'Project Number one', description: 'Something important about the project', user_id: 1},
-        { title: 'Project Number two', description: 'Something important about the project', user_id: 1}
-    ];
+function ProjectsController($scope,$http){
+
+    $http.get('/projects').success(function(projects) {
+        $scope.projects = projects;
+    });
+
+
+    $scope.addProject = function() {
+        var project = {
+            title: $scope.projectTitle,
+            description: $scope.projectDescription
+        };
+
+        $scope.projects.push(project);
+
+        $http.post('projects', project);
+    }
 }

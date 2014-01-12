@@ -20,7 +20,8 @@
 @if(Auth::check())
 <h1>Submit Your Own Project:</h1>
 
-{{ Form::open(array('action' => 'ProjectController@create')) }}
+
+{{ Form::open(array('action' => 'ProjectController@store')) }}
 {{ Form::label('title', 'Title:'); }}
 {{ Form::text('title','', array('class' => 'form-control')); }}
 {{ Form::label('description', 'Description:'); }}
@@ -29,6 +30,5 @@
 {{ Form::close() }}
 
 @endif
-
 
 @stop
