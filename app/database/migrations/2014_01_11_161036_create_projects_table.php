@@ -30,7 +30,7 @@ class CreateProjectsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('project');
+		Schema::drop('projects');
 	}
 
 }

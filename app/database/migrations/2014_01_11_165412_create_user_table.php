@@ -17,7 +17,7 @@ class CreateUserTable extends Migration {
             $table->string('email')->unique();
             $table->string('firstname');
 			$table->string('lastname');
-			$table->string('google_accesstoken');
+			$table->string('google_accesstoken')->default('');
 			$table->boolean('is_admin')->default(0);
             $table->softDeletes();
             $table->timestamps();

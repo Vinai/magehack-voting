@@ -24,7 +24,7 @@ Route::group(array('before'=>'auth'), function() {
 Route::get('oauth2/{provider}', 'OauthController@index');
 
 Route::get('login', array('as' => 'login', function () {
-    return Redirect::to('oauth2/google');
+    return Redirect::to('oauth2/github');
 }));
 
 Route::get('logout', array('as' => 'logout', function () {

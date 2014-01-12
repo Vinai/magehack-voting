@@ -7,6 +7,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
 
     {{ HTML::script('js/main.js') }}
+    {{ HTML::style('css/main.css') }}
+    {{ HTML::style('css/font-awesome.css') }}
 
 </head>
 
@@ -34,9 +36,11 @@
                 @if (Auth::check())
                     <li>{{ link_to_route('logout', 'Log Out') }}</li>
                 @else
-                    <a href="{{ URL::route('login') }}" class="btn">
-                        <img width="200" src="https://developers.google.com/accounts/images/sign-in-with-google.png"/ >
+
+                    <a href="{{ URL::route('login') }}" class="btn btn-block btn-social btn-github">
+                        <i class="fa fa-github"></i> Sign in with GitHub
                     </a>
+
                 @endif
             </ul>
         </div><!--/.nav-collapse -->
