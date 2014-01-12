@@ -7,6 +7,7 @@ class ProjectController extends BaseController
     {
         $this->project = $project;
     }
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -15,17 +16,6 @@ class ProjectController extends BaseController
 	public function index()
 	{
         return View::make('projects.index');
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-
-
 	}
 
 	/**
@@ -54,49 +44,4 @@ class ProjectController extends BaseController
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
 	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-        return View::make('projects.show');
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-        return View::make('projects.edit');
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
 }
