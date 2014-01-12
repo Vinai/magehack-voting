@@ -1,7 +1,12 @@
 <?php
 
-class ProjectController extends BaseController {
+class ProjectController extends BaseController
+{
 
+    public function __construct(Project $project)
+    {
+        $this->project = $project;
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -19,7 +24,8 @@ class ProjectController extends BaseController {
 	 */
 	public function create()
 	{
-        return View::make('projects.create');
+
+
 	}
 
 	/**
@@ -29,7 +35,24 @@ class ProjectController extends BaseController {
 	 */
 	public function store()
 	{
-		//
+        $user = Auth::user();
+
+        $input = Input::all();
+        $validation = Validator::make($input, Project::$rules);
+
+        if ($validation->passes())
+        {
+            $input['user_id'] = $user->id;
+            $input['hangout_url'] = '';
+            $this->project->create($input);
+
+            return Redirect::route('project.index');
+        }
+
+        return Redirect::route('project.index')
+            ->withInput()
+            ->withErrors($validation)
+            ->with('message', 'There were validation errors.');
 	}
 
 	/**
