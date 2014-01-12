@@ -9,13 +9,16 @@
     <div class="panel panel-default project" ng-repeat="project in projects">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-md-11">
+                <div class="col-md-9">
                     <h3 class="panel-title">@{{ project.title }}</h3>
                 </div>
                 @if(Auth::check())
-                <div class="col-md-1">
+                <div class="col-md-3 a-right">
                     <a href="{{ URL::route('project.index') }}" class="btn btn-default">
-                        <span class="glyphicon glyphicon-thumbs-up"></span> Vote
+                        <span class="glyphicon glyphicon-thumbs-up"></span> 1st Option
+                    </a>
+                    <a href="{{ URL::route('project.index') }}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-thumbs-up"></span> 2nd Option
                     </a>
                 </div>
                 @endif
