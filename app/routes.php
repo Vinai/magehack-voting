@@ -11,9 +11,15 @@
 |
 */
 
+
+// We map the homepage to the project list
 Route::get('/',  array('as' => 'project.index', 'uses' => 'ProjectController@index'));
 
+// Submit form only accessible for
+Route::group(array('before'=>'auth'), function() {
+    Route::resource('project', 'ProjectController');
 
+});
 Route::get('oauth2/{provider}', 'OauthController@index');
 
 Route::get('login', array('as' => 'login', function () {
@@ -25,3 +31,6 @@ Route::get('logout', array('as' => 'logout', function () {
     return Redirect::to('/');
 }))->before('auth');
 
+Route::get('projects', function(){
+    return Project::all();
+});
