@@ -13,9 +13,9 @@
         <div class="panel-body">
             <p>@{{ project.description }}</p>
         </div>
+
     </div>
 </div>
-
 
 @if(Auth::check())
 <h1>Submit Your Own Project:</h1>

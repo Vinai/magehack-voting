@@ -13,7 +13,7 @@ class AddGithubFieldsToUserTable extends Migration {
 	public function up()
 	{
 		Schema::table('users', function(Blueprint $table) {
-			$table->string('avata_url')->default('');
+			$table->string('avatar_url')->default('');
             $table->string('github_accesstoken')->default('');
             $table->string('github_username')->default('');
 		});
@@ -27,7 +27,7 @@ class AddGithubFieldsToUserTable extends Migration {
 	public function down()
 	{
 		Schema::table('users', function(Blueprint $table) {
-            $table->removeColumn('avata_url');
+            $table->removeColumn('avatar_url');
             $table->removeColumn('github_accesstoken');
             $table->removeColumn('github_username');
 		});

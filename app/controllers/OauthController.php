@@ -29,6 +29,7 @@ class OauthController extends BaseController {
             // Send a request with it
             $result = json_decode( $service->request( 'user' ), true );
 
+
             $user = User::where('email', '=',  $result['email'])->first();
 
             if($user){
@@ -42,7 +43,9 @@ class OauthController extends BaseController {
                 $user->email        = $result['email'];
                 $user->firstname    = $name[0];
                 $user->lastname     = $name[1];
+                $user->avatar_url   = $result['avatar_url'];
 
+                $user->github_username    = $result['login'];
                 $user->github_accesstoken = $token->getAccessToken();
 
                 $user->save();

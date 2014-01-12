@@ -34,6 +34,12 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 @if (Auth::check())
+                    <li>
+                        <a>
+                            <img height="20" src="{{Auth::user()->avatar_url}}" width="20">
+                            {{Auth::user()->github_username}}
+                        </a>
+                    </li>
                     <li>{{ link_to_route('logout', 'Log Out') }}</li>
                 @else
 
