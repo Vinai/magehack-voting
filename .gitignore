@@ -1,0 +1,8 @@
+/bootstrap/compiled.php
+/vendor
+composer.phar
+composer.lock
+.DS_Store
+Thumbs.db
+/.idea
+/app/config/packages/artdarek/oauth-4-laravel
