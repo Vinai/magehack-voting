@@ -63,13 +63,14 @@ votingApp
         }
     })
     .factory('ProjectFactory', function () {
-        return function Project(creator, timestamp) {
+        return function Project(creator) {
+            this.id = '';
             this.creator = creator;
             this.title = '';
             this.description = '';
             this.github = '';
             this.hangout = '';
-            this.created_at = new Date(timestamp);
+            this.created_at = new Date();
             this.votes = [];
             this.addVote = function (vote) {
                 this.votes.push(vote);
@@ -96,6 +97,7 @@ votingApp
     })
     .factory('VoteFactory', function () {
         return function Vote(user, project, timestamp) {
+            this.id = '';
             this.user = user;
             this.project = project;
             this.timestamp = new Date(timestamp);
@@ -117,9 +119,6 @@ votingApp
         
         return {
             authenticateUser: function () {
-                // ???
-            },
-            getUserInfo: function () {
                 // ???
             },
             getProjects: function () {
