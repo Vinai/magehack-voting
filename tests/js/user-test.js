@@ -19,7 +19,7 @@ describe('A mage hackathon participant', function () {
     // stub User
     beforeEach(inject(function (UserFactory) {
         user = new UserFactory();
-        user.gplus = '12345';
+        user.id = '12345';
     }));
 
     // stub Project
@@ -39,8 +39,8 @@ describe('A mage hackathon participant', function () {
     });
 
     it('should have a g+ account', function () {
-        expect(user.gplus).toBeDefined();
-        expect(typeof user.gplus).toBe('string');
+        expect(user.id).toBeDefined();
+        expect(typeof user.id).toBe('string');
     });
 
     it('should have a name', function () {
@@ -157,7 +157,7 @@ describe('A mage hackathon participant', function () {
     });
 
     it('should not be able to create projects when not authenticated', function () {
-        user.gplus = ''; // not authenticated
+        user.id = ''; // not authenticated
         expect(user.mayCreateProject()).toBe(false);
     });
 });

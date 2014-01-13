@@ -8,13 +8,13 @@ votingApp
         var projectFactory = ProjectFactory;
         
         return function () {
-            this.gplus = '';
+            this.id = '';
             this.name = '';
             this.is_admin = false;
             this.max_votes = 2;
             this.votes = [];
             this.isAuthenticated = function () {
-                return this.gplus != '';
+                return this.id != '';
             };
             this.mayVote = function () {
                 return this.isAuthenticated() && this.remainingVotes() > 0;
@@ -91,7 +91,7 @@ votingApp
                 if (user.is_admin) {
                     return true;
                 }
-                return this.creator.gplus == user.gplus;
+                return this.creator.id == user.id;
             }
         }
     })

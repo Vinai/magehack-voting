@@ -8,7 +8,7 @@ describe('A mage hackathon project', function () {
     });
     
     beforeEach(function () {
-        user = { gplus: 1234, is_admin: false }
+        user = { id: 1234, is_admin: false }
     });
 
     beforeEach(inject(function (ProjectFactory) {
@@ -84,12 +84,12 @@ describe('A mage hackathon project', function () {
         expect(project.isEditable(user)).toBe(true);
     });
     it('should be editable by admin who is not the creator', function () {
-        var admin = { is_admin: true, gplus: (user.gplus + 1) };
+        var admin = { is_admin: true, id: (user.id + 1) };
         expect(project.isEditable(admin)).toBe(true);
     });
 
     it('should not be editable by a regular user who is not the creator', function () {
-        var not_creator = { is_admin: false, gplus: (user.gplus + 1) };
+        var not_creator = { is_admin: false, id: (user.id + 1) };
         expect(project.isEditable(not_creator)).toBe(false);
     });
 
