@@ -19,6 +19,11 @@ describe('A mage hackathon project', function () {
         vote = { user: user, project: project }
     });
 
+    it('should have an id', function () {
+        expect(project.id).toBeDefined();
+        expect(typeof project.id).toBe('string');
+    });
+
     it('should have a creator', function () {
         expect(project.creator).toBeDefined();
         expect(typeof project.creator).toBe('object');

@@ -19,6 +19,11 @@ describe('A mage hackathon vote', function () {
         vote = new VoteFactory(user, project);
     }));
 
+    it('should have an id', function () {
+        expect(vote.id).toBeDefined();
+        expect(typeof vote.id).toBe('string');
+    });
+
     it('should have a project', function () {
         expect(vote.project).toBeDefined();
         expect(typeof vote.project).toBe('object');
