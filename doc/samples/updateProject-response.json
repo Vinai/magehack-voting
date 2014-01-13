@@ -1,0 +1,17 @@
+{
+    "id": "project-id x",
+    "creator": "user-id x",
+    "title": "The Project Title",
+    "description": "The Project Description",
+    "github": "https://github.com/magento-hackathon/the-project-name",
+    "hangout": "hangout://whatever-this-looks-like",
+    "created_at": "UNIX timestamp",
+    "votes": [
+        {
+            "id": "vote-id x",
+            "user": "user-id x",
+            "project": "project-id x",
+            "created_at": "UNIX timestamp"
+        }
+    ]
+}
