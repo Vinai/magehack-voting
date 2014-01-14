@@ -43,9 +43,19 @@ describe('A mage hackathon participant', function () {
         expect(typeof user.id).toBe('string');
     });
 
-    it('should have a name', function () {
-        expect(user.name).toBeDefined();
-        expect(typeof user.name).toBe('string');
+    it('should have a firstname', function () {
+        expect(user.firstname).toBeDefined();
+        expect(typeof user.firstname).toBe('string');
+    });
+
+    it('should have a lastname', function () {
+        expect(user.lastname).toBeDefined();
+        expect(typeof user.lastname).toBe('string');
+    });
+
+    it('should have a github_username', function () {
+        expect(user.github_username).toBeDefined();
+        expect(typeof user.github_username).toBe('string');
     });
 
     it('should have a is_admin flag', function () {
@@ -143,7 +153,7 @@ describe('A mage hackathon participant', function () {
     it('should be able to take back a vote for a project previously voted for', function () {
         project.hasVote = function () {
             return true;
-        } // stub function
+        }
         user.vote(project);
         expect(user.mayUnVote(project)).toBe(true);
     });
