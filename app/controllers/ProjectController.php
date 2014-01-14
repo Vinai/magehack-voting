@@ -7,14 +7,14 @@ class ProjectController extends \BaseController
         $this->project = $project;
     }
 
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
+    /**
+     * Return a list of all the projects available
+     *
+     * @return mixed
+     */
+    public function index()
 	{
+        // Get all projects and load the owner and the votes with their corresponding users.
         $project = Project::with('user')
             ->with('votes.user')
             ->get();
@@ -23,27 +23,22 @@ class ProjectController extends \BaseController
     }
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
 	public function store()
 	{
-        $user = Auth::user();
+        // Get the current user
+        $user   = Auth::user();
 
-        $input = Input::all();
+        // Get the Post input values
+        $input  = Input::all();
+
+        // Validate against the model rules
         $validation = Validator::make($input, Project::$rules);
 
+        // If validation passes create and return project
         if ($validation->passes())
         {
             $input['user_id'] = $user->id;
@@ -67,25 +62,14 @@ class ProjectController extends \BaseController
 	 */
 	public function show($id)
 	{
+        // Get the requested project by id with the user and vote models
         $project = Project::where('id','=',$id)
             ->with('user')
             ->with('votes')
             ->first();
 
         return $project;
-
     }
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
 
 	/**
 	 * Update the specified resource in storage.
@@ -95,7 +79,29 @@ class ProjectController extends \BaseController
 	 */
 	public function update($id)
 	{
-		//
+        // Get the current user
+        $user   = Auth::user();
+
+        // Get the Post input values
+        $input = array_except(Input::all(), '_method');
+
+        // Validate the input against the project model rules
+        $validation = Validator::make($input, Project::$rules);
+
+        if ($validation->passes())
+        {
+            $project = $this->project
+                ->where('id', '=', $id)
+                ->where('user_id', '=', $user->id);
+            $project->update($input);
+
+            return $project;
+        }
+
+        return Redirect::route('projects.index')
+            ->withInput()
+            ->withErrors($validation)
+            ->with('message', 'There were validation errors.');
 	}
 
 	/**
@@ -106,6 +112,8 @@ class ProjectController extends \BaseController
 	 */
 	public function destroy($id)
 	{
-		//
-	}
+		// Delete the post provided
+        $this->project->find($id)->delete();
+
+    }
 }
