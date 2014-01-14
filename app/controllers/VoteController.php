@@ -38,6 +38,7 @@ class VoteController extends \BaseController
         // If validation passes create and return project
         if ($validation->passes())
         {
+            $input['user_id'] = $user->id;
             $vote = $this->vote->create($input);
             return $vote;
         }
