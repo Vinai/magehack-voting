@@ -4,6 +4,19 @@ var votingApp = angular.module('magehack-voting', []);
 votingApp.value('initData', {});
 
 votingApp
+    .directive('mageHackVotesInit', function(initData) {
+        return {
+            restrict: 'E',
+            link: function(scope, elements, attrs) {
+                var data = {};
+                try {
+                    data = eval('(' + elements[0].innerHTML + ')');
+                    elements[0].innerHTML = '';
+                } catch (e) {}
+                angular.extend(initData, data);
+            }
+        }
+    })
     .factory('UserSession', function (UserFactory, initData) {
         var user = new UserFactory();
         angular.extend(user, initData);
@@ -159,6 +172,7 @@ votingApp
                 vote.id = record.id;
                 user.addVote(vote);
                 project.addVote(vote);
+                votes.push(vote);
             }
 
             return vote;
@@ -214,13 +228,18 @@ votingApp
                 }
                 transport.delete('/projects/' + project.id, project)
                     .success(function (response) {
+                        // todo: check for response.success == true etc...
+                        angular.forEach(project.votes, function(vote) {
+                            removeById(votes, vote.id);
+                            removeById(session.votes, vote.id);
+                        });
                         removeById(projects, project.id);
                     })
                     .error(function (response, status) {
                         alert("Error: " + status);
                     });
             },
-            createVote: function (project) {
+            createVoteForProject: function (project) {
                 if (!session.isAuthenticated()) {
                     throw new Error('Not authorized!');
                 }
@@ -241,7 +260,21 @@ votingApp
                 if (!authenticated) {
                     throw new Error('Not authorized!');
                 }
-                // todo
+                transport.delete('/votes/' + vote.id)
+                    .success(function (response) {
+                        // todo: check for response.success == true etc...
+                        var project, user;
+                        if (project = service.getProjectById(vote.project.id)) {
+                            removeById(project.votes, vote.id);
+                        }
+                        if (user = service.getUserById(vote.user.id)) {
+                            removeById(user.votes, vote.id);
+                        }
+                        removeById(votes, vote.id);
+                    })
+                    .error(function (response, status) {
+                        alert("Error: " + status);
+                    });
             }
         };
 

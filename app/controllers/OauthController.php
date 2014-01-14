@@ -13,7 +13,7 @@ class OauthController extends BaseController {
         // get data from input
         $code = Input::get( 'code' );
         // get google service
-        $provider = ucfirst($provider);
+        $provider = 'GitHub'; //ucfirst($provider);
         $service = OAuth::consumer($provider);
 
         // check if code is valid

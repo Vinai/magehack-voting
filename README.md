@@ -4,10 +4,11 @@ magehack-voting
 How to run the app:
  
  - composer update
+ - php artisan config:publish artdarek/oauth-4-laravel
  - php artisan migrate:refresh
  - php artisan db:seed
  - php artisan serve
- 
+
 You will need php5.4 or greater.
 
 
@@ -16,6 +17,7 @@ For seeing the routes available run:
 ```
 $ php artisan routes
 ```
+
 
 To run the JavaScript tests:
 
