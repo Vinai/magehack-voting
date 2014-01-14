@@ -120,60 +120,50 @@ votingApp
         var users = [];
         var votes = [];
 
-        $http.get('/projects').success(function (response) {;
-            var entity;
-            if (typeof response.users != 'undefined') {
-                for (var i = 0; i < response.users.length; i++) {
-                    if (entity = processResponseUser(response.users[i])) {
-                        users.push(entity);
-                    }
-                }
-                if (typeof response.projects != 'undefined') {
-                    for (var i = 0; i < response.projects.length; i++) {
-                        if (entity = processResponseProject(response.projects[i])) {
-                            projects.push(entity);
-                        }
-                    }
-                }
-                if (typeof response.votes != 'undefined') {
-                    for (var i = 0; i < response.votes.length; i++) {
-                        if (entity = processResponseVote(response.votes[i])) {
-                            votes.push(entity);
-                        }
-                    }
+        $http.get('/projects').success(function (response) {
+            angular.forEach(response, processResponseProject);
+        });
+
+        var processResponseProject = function (record) {
+            var project, user;
+
+            if (! (project = service.getProjectById(record.id))) {
+                if (user = processResponseUser(record.user)) {
+                    project = new projectFactory(user);
+                    delete record.user;
+                    angular.extend(project, record);
+                    project.votes = [];
+                    projects.push(project);
+                
+                    angular.forEach(record.votes, processResponseVote);
                 }
             }
-        });
-        
-        var processResponseUser = function (record) {
-            var entity;
-            entity = new userFactory();
-            angular.extend(entity, record);
-            return entity;
+            return project;
         }
         
-        var processResponseProject = function (record) {
-            var entity, user;
-            if (user = service.getUserById(record.creator)) {
-                entity = new projectFactory(user);
-                angular.extend(entity, record);
-                entity.votes = [];
+        var processResponseUser = function (record) {
+            var user = service.getUserById(record.id);
+            if (! user) {
+                user = new userFactory();
+                angular.extend(user, record);
+                users.push(user);
             }
-            return entity;
+            return user;
         }
         
         var processResponseVote = function (record) {
-            var entity, user, project, timestamp;
-            if (user = service.getUserById(record.user_id)) {
+            var vote, user, project, timestamp;
+            if (user = processResponseUser(record.user)) {
                 if (project = service.getProjectById(record.project_id)) {
                     timestamp = Date.parse(record.created_at.replace(' ', 'T'));
-                    entity = new voteFactory(user, project, timestamp);
-                    entity.id = record.id;
-                    user.addVote(entity);
-                    project.addVote(entity);
+                    vote = new voteFactory(user, project, timestamp);
+                    vote.id = record.id;
+                    user.addVote(vote);
+                    project.addVote(vote);
                 }
             }
-            return entity;
+            
+            return vote;
         }
 
         var service = {

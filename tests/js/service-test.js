@@ -25,16 +25,17 @@ describe('The mage hackathon votes service', function () {
         "user_id": "1",
         "project_id": "1",
         "created_at": "2014-01-01 00:00:00",
-        "updated_at": "2014-01-01 00:00:00"
+        "updated_at": "2014-01-01 00:00:00",
+        "user": data_response_user
     };
     data_response_project = {
         "id": "1",
-        "creator": "1",
+        "user": data_response_user,
         "title": "The Project Title",
         "description": "The Project Description",
         "github": "https://github.com/magento-hackathon/the-project-name",
         "hangout": "hangout://whatever-this-looks-like",
-        "created_at": new Date().getTime(),
+        "created_at": "2014-01-12 00:00:00",
         "votes": [ data_response_vote ]
     };
 
@@ -231,11 +232,7 @@ describe('The mage hackathon votes service', function () {
     it('should eager load users, projects and votes during initialization', inject(function ($httpBackend) {
         var user, vote, projects, project = null;
         
-        var json_response_getProjects = JSON.stringify({
-            "projects": [ data_response_project ],
-            "users": [ data_response_user ],
-            "votes": [ data_response_vote ]
-        });
+        var json_response_getProjects = JSON.stringify([ data_response_project ]);
         $httpBackend.expectGET('/projects')
             .respond(200, json_response_getProjects);
         $httpBackend.flush();
@@ -246,7 +243,7 @@ describe('The mage hackathon votes service', function () {
         expect(projects.length).toBe(1);
         expect(projects[0]).toBe(project);
         expect(project.id).toBe(data_response_project.id);
-        expect(project.creator).toBe(data_response_project.creator);
+        expect(project.creator).toBe(user);
         expect(project.title).toBe(data_response_project.title);
         expect(project.description).toBe(data_response_project.description);
         expect(project.votes.length = data_response_project.votes.length);
