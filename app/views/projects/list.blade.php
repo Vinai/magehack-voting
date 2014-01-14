@@ -43,7 +43,7 @@
                 <ul class="participants">
                     <li ng-repeat="vote in project.votes">
                         <a>
-                            <img ng-xif="vote.user.avatar_url" height="40" src="@{{ vote.user.avatar_url }}" width="40" title="@{{  vote.user.github_username  }}"/>
+                            <img ng-if="vote.user.avatar_url" height="40" src="@{{ vote.user.avatar_url }}" width="40" title="@{{  vote.user.github_username  }}"/>
                         </a>
                     </li>
                 </ul>

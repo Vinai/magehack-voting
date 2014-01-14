@@ -162,9 +162,9 @@ votingApp
             var user = service.getUserById(record.id);
             if (!user) {
                 user = new userFactory();
-                angular.extend(user, record);
                 users.push(user);
             }
+            angular.extend(user, record);
             return user;
         }
 
@@ -174,8 +174,6 @@ votingApp
                 user = processResponseUser(record.user)
             } else if (typeof record.user_id != 'undefined') {
                 user = service.getUserById(record.user_id);
-            } else {
-                user = session;
             }
             if (user && (project = service.getProjectById(record.project_id))) {
                 timestamp = Date.parse(record.created_at.replace(' ', 'T'));
@@ -192,6 +190,9 @@ votingApp
         var service = {
             projects: projects,
             getUserById: function (user_id) {
+                if (user_id = session.id) {
+                    return session;
+                }
                 for (var i = 0; i < users.length; i++) {
                     if (users[i].id == user_id) {
                         return users[i];
@@ -259,6 +260,9 @@ votingApp
                 }
                 transport.post('/votes', {'project_id': project.id})
                     .success(function (response) {
+                        if (!response.user_id && ! response.user) {
+                            response.user_id = session.user_id;
+                        }
                         processResponseVote(response);
                     })
                     .error(function (response, status) {

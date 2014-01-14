@@ -45,6 +45,7 @@ describe('The mage hackathon votes service', function () {
         module('magehack-voting', function ($provide) {
             user = {
                 id: "1",
+                github_username: "test",
                 is_admin: false,
                 remaining_votes: 2,
                 isAuthenticated: function () {
