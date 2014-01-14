@@ -5,6 +5,7 @@ describe('The mage hackathon votes service', function () {
     // sample response data
     var data_response_project, data_response_vote, data_response_user = '';
 
+    // Fixture components
     data_response_user = {
         "id": "1",
         "email": "dev@allanmacgregor.com",
@@ -43,7 +44,7 @@ describe('The mage hackathon votes service', function () {
     beforeEach(function () {
         module('magehack-voting', function ($provide) {
             user = {
-                id: '1234',
+                id: "1",
                 is_admin: false,
                 remaining_votes: 2,
                 isAuthenticated: function () {
@@ -51,6 +52,8 @@ describe('The mage hackathon votes service', function () {
                 },
                 remainingVotes: function () {
                     return this.remaining_votes;
+                },
+                addVote: function () {
                 }
             };
             $provide.value('UserSession', user);
@@ -62,7 +65,8 @@ describe('The mage hackathon votes service', function () {
     }));
 
     beforeEach(function () {
-        project = { creator: user.id };
+        project = { creator: { id: user.id }, addVote: function () {
+        } };
     });
 
     beforeEach(function () {
@@ -73,9 +77,9 @@ describe('The mage hackathon votes service', function () {
         vote = { user: voteUser, project: voteProject };
     });
 
-    it('should have a getProjects resource', function () {
-        expect(service.getProjects).toBeDefined();
-        expect(typeof service.getProjects).toBe('function');
+    it('should have a projects property', function () {
+        expect(service.projects).toBeDefined();
+        expect(typeof service.projects).toBe('object');
     });
 
     it('should have a createProject resource', function () {
@@ -111,11 +115,6 @@ describe('The mage hackathon votes service', function () {
     it('should have a getProjectById resource', function () {
         expect(service.getProjectById).toBeDefined();
         expect(typeof service.getProjectById).toBe('function');
-    });
-
-    it('should allow un-authenticated users to call getProjects', function () {
-        user.id = '';
-        expect(service.getProjects).not.toThrow(new Error('Not authorized!'));
     });
 
     it('should not allow un-authenticated users to call createProject', function () {
@@ -230,16 +229,16 @@ describe('The mage hackathon votes service', function () {
     });
 
     it('should eager load users, projects and votes during initialization', inject(function ($httpBackend) {
-        var user, vote, projects, project = null;
-        
+        var user, projects, project;
+
         var json_response_getProjects = JSON.stringify([ data_response_project ]);
         $httpBackend.expectGET('/projects')
             .respond(200, json_response_getProjects);
         $httpBackend.flush();
-        
+
         user = service.getUserById(data_response_user.id);
         project = service.getProjectById(data_response_project.id);
-        projects = service.getProjects();
+        projects = service.projects;
         expect(projects.length).toBe(1);
         expect(projects[0]).toBe(project);
         expect(project.id).toBe(data_response_project.id);
@@ -252,5 +251,121 @@ describe('The mage hackathon votes service', function () {
         expect(user.id).toBe(data_response_user.id);
         expect(user.firstname).toBe(data_response_user.firstname);
         expect(user.lastname).toBe(data_response_user.lastname);
+    }));
+
+    it('should add a new project to the list when createProject is called', inject(function ($httpBackend) {
+        var json_response_project = JSON.stringify(data_response_project);
+        var project_length_before = service.projects.length; // 0
+
+        $httpBackend.expectGET('/projects')
+            .respond(200, '[]');
+        $httpBackend.expectPOST('/projects')
+            .respond(200, json_response_project)
+
+        service.createProject({
+            title: data_response_project.title,
+            description: data_response_project.description,
+            github: data_response_project.github,
+            hangout: data_response_project.hangout
+        });
+
+        $httpBackend.flush();
+
+        expect(service.projects.length).toBe(project_length_before + 1);
+        expect(service.getProjectById(data_response_project.id)).toBeTruthy();
+    }));
+
+    it('should update a project when updateProject is called', inject(function ($httpBackend) {
+
+        // Build updated project data
+        var data_updated_project = angular.extend({}, data_response_project);
+        data_updated_project.title = data_response_project.title + ' some more text ';
+        data_updated_project.description = data_response_project.description.substr(0, 2);
+
+        // Build response json for initial request and project update
+        var json_response_getProjects = JSON.stringify([ data_response_project ]);
+        var json_response_updateProject = JSON.stringify(data_updated_project);
+
+        $httpBackend.expectGET('/projects')
+            .respond(200, json_response_getProjects);
+
+        $httpBackend.expectPUT('/projects/' + data_response_project.id)
+            .respond(200, json_response_updateProject)
+
+        service.updateProject({
+            id: data_updated_project.id,
+            creator: { id: user.id },
+            title: data_updated_project.title,
+            description: data_updated_project.description,
+            github: data_updated_project.github,
+            hangout: data_updated_project.hangout
+        });
+
+        $httpBackend.flush();
+
+        var project = service.getProjectById(data_updated_project.id);
+        expect(project.title).toBe(data_updated_project.title);
+        expect(project.description).toBe(data_updated_project.description);
+    }));
+
+    it('should remove a project when deleteProject is called by an admin', inject(function ($httpBackend) {
+        user.is_admin = true;
+        var json_response_getProjects = JSON.stringify([ data_response_project ]);
+        var data_delete_project = {
+            "id": data_response_project.id,
+            "success": true
+        };
+        var json_response_deleteProject = JSON.stringify(data_delete_project);
+
+        $httpBackend.expectGET('/projects')
+            .respond(200, json_response_getProjects);
+
+        $httpBackend.expectDELETE('/projects/' + data_response_project.id)
+            .respond(200, json_response_deleteProject)
+
+        service.deleteProject({
+            id: data_delete_project.id
+        });
+
+        $httpBackend.flush();
+
+        var project = service.getProjectById(data_delete_project.id);
+
+        expect(project).toBe(false);
+        expect(service.projects.length).toBe(0);
+    }));
+
+    it('should call addVote on the project and the user when createVote is called', inject(function ($httpBackend) {
+        data_response_project.votes = [];
+        user.votes = [];
+
+        var json_response_getProjects = JSON.stringify([ data_response_project ]);
+
+        var vote = angular.extend({}, data_response_vote);
+        delete vote.user;
+        var json_response_createVote = JSON.stringify(vote);
+
+        $httpBackend.expectGET('/projects')
+            .respond(200, json_response_getProjects);
+
+        $httpBackend.expectPOST('/votes')
+            .respond(200, json_response_createVote);
+
+        project.id = data_response_project.id;
+
+        spyOn(project, 'addVote');
+        spyOn(user, 'addVote');
+
+        service.createVote(project);
+
+        $httpBackend.flush();
+    }));
+
+    it('should call removeVote on the project and the user when deleteVote is called', inject(function ($httpBackend) {
+        var json_response_getProjects = JSON.stringify([ data_response_project ]);
+        $httpBackend.expectGET('/projects')
+            .respond(200, json_response_getProjects);
+
+        
     }));
 });
