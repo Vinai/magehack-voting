@@ -1,7 +1,7 @@
 describe('Directive: mage-hack-votes-init', function () {
-    var element, scope, init_data;
+    var element, scope, init_data, data_init_data;
 
-    var data_init_data = {
+    data_init_data = {
         id: '1',
         is_admin: false,
         votes: []
