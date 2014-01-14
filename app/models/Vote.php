@@ -1,7 +1,7 @@
 <?php
 
 class Vote extends Eloquent {
-	protected $guarded = array();
+    protected $guarded = array('id');
 
 	public static $rules = array();
 

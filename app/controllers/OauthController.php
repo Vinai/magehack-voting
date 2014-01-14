@@ -1,7 +1,5 @@
 <?php
 
-
-
 class OauthController extends BaseController {
 
 	/**
@@ -28,7 +26,6 @@ class OauthController extends BaseController {
 
             // Send a request with it
             $result = json_decode( $service->request( 'user' ), true );
-
 
             $user = User::where('email', '=',  $result['email'])->first();
 

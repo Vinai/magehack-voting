@@ -11,30 +11,35 @@
 |
 */
 
-
-// We map the homepage to the project list
-Route::get('/',  array('as' => 'project.index', 'uses' => 'ProjectController@index'));
-
-// Submit form only accessible for
+// Create restful controllers only available for authenticated users
 Route::group(array('before'=>'auth'), function() {
-    Route::resource('project', 'ProjectController');
-
+    Route::resource('projects', 'ProjectController');
+    Route::resource('users', 'UserController');
+    Route::resource('votes', 'VoteController');
 });
 
+//
+Route::get('projects','ProjectController@index');
+
+// We map the homepage to the the project index
+Route::get('/', function()
+{
+    return View::make('projects.list');
+});
+// Oauth controller for user registration and login
 Route::get('oauth2/{provider}', 'OauthController@index');
 
+// Simple redirect to the login controller
 Route::get('login', array('as' => 'login', function () {
     return Redirect::to('oauth2/github');
 }));
 
+// Dirty but effective way of handling the logout
 Route::get('logout', array('as' => 'logout', function () {
     Auth::logout();
     return Redirect::to('/');
 }))->before('auth');
 
-Route::get('projects', function(){
-    return Project::all();
-});
 
 Route::get('project/votes/{id}', function($id){
     $collection = DB::table('votes')
