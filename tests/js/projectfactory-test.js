@@ -60,6 +60,11 @@ describe('A mage hackathon project', function () {
         expect(project.votes.length).toBeGreaterThan(-0.01);
     });
 
+    it('should have a voteCount method', function () {
+        expect(project.voteCount).toBeDefined();
+        expect(typeof project.voteCount).toBe('function');
+    });
+
     it('should have a addVote method', function () {
         expect(project.addVote).toBeDefined();
         expect(typeof project.addVote).toBe('function');

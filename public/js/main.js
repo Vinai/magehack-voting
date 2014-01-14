@@ -22,20 +22,18 @@ votingApp
         angular.extend(user, initData);
         return user;
     })
-    .factory('UserFactory', function (VoteFactory, ProjectFactory) {
-        var voteFactory = VoteFactory;
-        var projectFactory = ProjectFactory;
-
+    .factory('UserFactory', function (VoteFactory) {
         return function () {
             this.id = '';
             this.firstname = '';
             this.lastname = '';
             this.github_username = '';
             this.is_admin = false;
+            this.avatar_url = '';
             this.max_votes = 2;
             this.votes = [];
             this.isAuthenticated = function () {
-                return this.id != '';
+                return this.id != '' && this.github_username != '';
             };
             this.mayVote = function () {
                 return this.isAuthenticated() && this.remainingVotes() > 0;
@@ -43,7 +41,7 @@ votingApp
             this.remainingVotes = function () {
                 return this.max_votes - this.votes.length;
             };
-            this.mayUnVote = function (project) {
+            this.mayUnvote = function (project) {
                 var i;
                 for (i = this.votes.length - 1; i >= 0; i--) {
                     if (project.hasVote(this.votes[i])) {
@@ -66,6 +64,14 @@ votingApp
             this.mayCreateProject = function () {
                 return this.isAuthenticated();
             };
+            this.voteCountForProject = function(project) {
+                var i, count = 0;
+                for (i = 0; i < this.votes.length; i++) {
+                    if (this.votes[i].project.id == project.id)
+                        count++;
+                }
+                return count;
+            };
         }
     })
     .factory('ProjectFactory', function () {
@@ -78,6 +84,9 @@ votingApp
             this.hangout = '';
             this.created_at = new Date();
             this.votes = [];
+            this.voteCount = function () {
+                return this.votes.length;
+            };
             this.addVote = function (vote) {
                 this.votes.push(vote);
             };
@@ -161,10 +170,12 @@ votingApp
 
         var processResponseVote = function (record) {
             var vote, user, project, timestamp;
-            if (typeof record.user != 'undefined') {
+            if (typeof record.user != 'undefined' && record.user) {
                 user = processResponseUser(record.user)
             } else if (typeof record.user_id != 'undefined') {
                 user = service.getUserById(record.user_id);
+            } else {
+                user = session;
             }
             if (user && (project = service.getProjectById(record.project_id))) {
                 timestamp = Date.parse(record.created_at.replace(' ', 'T'));
@@ -246,7 +257,7 @@ votingApp
                 if (session.remainingVotes() < 1) {
                     throw new Error('No votes left!');
                 }
-                transport.post('/votes', {'project-id': project.id})
+                transport.post('/votes', {'project_id': project.id})
                     .success(function (response) {
                         processResponseVote(response);
                     })
@@ -268,8 +279,9 @@ votingApp
                             removeById(project.votes, vote.id);
                         }
                         if (user = service.getUserById(vote.user.id)) {
-                            removeById(user.votes, vote.id);
+                            user.removeVote(vote)
                         }
+                        session.removeVote(vote);
                         removeById(votes, vote.id);
                     })
                     .error(function (response, status) {
@@ -280,11 +292,12 @@ votingApp
 
         return service;
     })
-    .controller('ProjectsController', function ($scope, Service) {
+    .controller('ProjectsController', function ($scope, Service, UserSession) {
 
         var service = Service;
 
         $scope.projects = service.projects;
+        $scope.user = UserSession;
 
         $scope.addProject = function () {
             service.createProject({
@@ -294,12 +307,20 @@ votingApp
                 hangout: ''
             });
         }
-    })
-    .controller('VotesController', function ($scope, $http) {
 
-        $http.get('/project/votes/' + $scope.project.id).success(function (votes) {
-            $scope.projectVotes = votes;
-        });
+        $scope.vote = function (project) {
+            service.createVoteForProject(project);
+        }
 
-    })
+        $scope.unvote = function (project) {
+            var i, vote;
+            for (i = 0; i < project.votes.length; i++) {
+                vote = project.votes[i];
+                if (vote.user.id == $scope.user.id) {
+                    service.deleteVote(vote);
+                    break;
+                }
+            };
+        }
+    });
 ;

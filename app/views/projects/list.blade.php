@@ -4,22 +4,29 @@
 
 <h1>MageHack Projects:</h1>
 
-<div ng-app="magehack-voting">
-    <mage-hack-votes-init><?php echo json_encode(Auth::user()->getAttributes()) ?></mage-hack-votes-init>
+<div ng-app="magehack-voting" ng-cloak>
+    <?php $initData = array_intersect_key(
+        (Auth::check() ? Auth::user()->getAttributes() : array('id' => '')),
+        array_flip(array('id', 'firstname', 'lastname', 'is_admin', 'github_username', 'max_votes', 'avatar_url'))
+    ) ?>
+    <mage-hack-votes-init><?php echo json_encode($initData) ?></mage-hack-votes-init>
     <div class="projects-container" ng-controller="ProjectsController">
         <div class="panel panel-default project" ng-repeat="project in projects">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-9">
                         <h3 class="panel-title">@{{ project.title }}</h3>
+                        <span ng-hide="project.voteCount() == 1">@{{ project.voteCount() }} Votes</span><span
+                            ng-show="project.voteCount() == 1">@{{ project.voteCount() }} Vote</span><span
+                            ng-show="user.voteCountForProject(project) > 0">, @{{ user.voteCountForProject(project) }} from me</span>
                     </div>
                     @if(Auth::check())
                     <div class="col-md-3 a-right">
-                        <a href="{{ URL::route('projects.index') }}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-thumbs-up"></span> 1st Option
+                        <a href="" class="btn btn-default" title="Remaining Votes: @{{user.remainingVotes()}}" ng-show="user.mayVote(project)" ng-click="vote(project)">
+                            <span class="glyphicon glyphicon-thumbs-up"></span> Vote
                         </a>
-                        <a href="{{ URL::route('projects.index') }}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-thumbs-up"></span> 2nd Option
+                        <a href="" class="btn btn-default"  title="Remaining Votes: @{{user.remainingVotes()}}" ng-show="user.mayUnvote(project)" ng-click="unvote(project)">
+                            <span class="glyphicon glyphicon-thumbs-down"></span> Unvote
                         </a>
                     </div>
                     @endif
@@ -27,31 +34,37 @@
             </div>
             <div class="panel-body">
                 <p>@{{ project.description }}</p>
+                <p ng-show="project.github || project.hangout">
+                    <div ng-show="project.github">GitHub Repository: <a href="@{{ project.github }}">@{{ project.github }}</a></div>
+                    <div ng-show="project.hangout">Google Hangout: <a href="@{{ project.hangout }}">@{{ project.hangout }}</a></div>
+                </p>
             </div>
             <div class="panel-heading panel-participants">
-                <ul class="participants" ng-controller="VotesController">
-                    <li ng-repeat="vote in projectVotes">
+                <ul class="participants">
+                    <li ng-repeat="vote in project.votes">
                         <a>
-                            <img height="40" src="@{{ vote.avatar_url }}" width="40">
+                            <img ng-xif="vote.user.avatar_url" height="40" src="@{{ vote.user.avatar_url }}" width="40" title="@{{  vote.user.github_username  }}"/>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
+        <div ng-show="user.mayCreateProject()">
+            <h1>Submit Your Own Project:</h1>
+        
+            {{ Form::open(array('action' => 'ProjectController@store')) }}
+            {{ Form::label('title', 'Title:'); }}
+            {{ Form::text('title','', array('class' => 'form-control')); }}
+            {{ Form::label('description', 'Description:'); }}
+            {{ Form::textarea('description','', array('class' => 'form-control')); }}
+            {{ Form::label('github', 'GitHub:'); }}
+            {{ Form::text('github','', array('class' => 'form-control')); }}
+            {{ Form::label('hangout', 'Hangout:'); }}
+            {{ Form::text('hangout','', array('class' => 'form-control')); }}
+            {{ Form::submit('Submit'); }}
+            {{ Form::close() }}
+        </div>
     </div>
 </div>
-@if(Auth::check())
-<h1>Submit Your Own Project:</h1>
-
-
-{{ Form::open(array('action' => 'ProjectController@store')) }}
-{{ Form::label('title', 'Title:'); }}
-{{ Form::text('title','', array('class' => 'form-control')); }}
-{{ Form::label('description', 'Description:'); }}
-{{ Form::textarea('description','', array('class' => 'form-control')); }}
-{{ Form::submit('Submit'); }}
-{{ Form::close() }}
-
-@endif
 
 @stop

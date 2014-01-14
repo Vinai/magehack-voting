@@ -19,12 +19,14 @@ describe('A mage hackathon participant', function () {
     // stub User
     beforeEach(inject(function (UserFactory) {
         user = new UserFactory();
-        user.id = '12345';
+        user.id = '1';
+        user.github_username = 'test';
     }));
 
     // stub Project
     beforeEach(function () {
         project = {
+            id: '1',
             addVote: function () {
             },
             removeVote: function () {
@@ -63,6 +65,11 @@ describe('A mage hackathon participant', function () {
         expect(typeof user.is_admin).toBe('boolean');
     });
 
+    it('should have a avatar_url value', function () {
+        expect(user.avatar_url).toBeDefined();
+        expect(typeof user.avatar_url).toBe('string');
+    });
+
     it('should have zero or more votes', function () {
         expect(user.votes).toBeDefined();
         expect(typeof user.votes).toBe('object');
@@ -90,9 +97,9 @@ describe('A mage hackathon participant', function () {
         expect(typeof user.remainingVotes).toBe('function');
     });
 
-    it('should have a mayUnVote method', function () {
-        expect(user.mayUnVote).toBeDefined();
-        expect(typeof user.mayUnVote).toBe('function');
+    it('should have a mayUnvote method', function () {
+        expect(user.mayUnvote).toBeDefined();
+        expect(typeof user.mayUnvote).toBe('function');
     });
 
     it('should have a addVote method', function () {
@@ -103,6 +110,11 @@ describe('A mage hackathon participant', function () {
     it('should have a mayCreateProject method', function () {
         expect(user.mayCreateProject).toBeDefined();
         expect(typeof user.mayCreateProject).toBe('function');
+    });
+
+    it('should have a voteCountForProject method', function () {
+        expect(user.voteCountForProject).toBeDefined();
+        expect(typeof user.voteCountForProject).toBe('function');
     });
 
     it('should be able to vote for a project if remaining vote count > 0', function () {
@@ -143,11 +155,22 @@ describe('A mage hackathon participant', function () {
             return true;
         }
         user.addVote(vote);
-        expect(user.mayUnVote(project)).toBe(true);
+        expect(user.mayUnvote(project)).toBe(true);
     });
 
     it('should not be able to take back a vote for a project not previously voted for', function () {
-        expect(user.mayUnVote(project)).toBe(false);
+        expect(user.mayUnvote(project)).toBe(false);
+    });
+    
+    it('should return the number of votes from for a project when voteCountForProject is called', function() {
+        var vote = { id: '1', project: project };
+        var vote_different_project = { id: '2', project: {id: '2'} };
+
+        expect(user.voteCountForProject(project)).toBe(0);
+        user.addVote(vote);
+        expect(user.voteCountForProject(project)).toBe(1);
+        user.addVote(vote_different_project);
+        expect(user.voteCountForProject(project)).toBe(1);
     });
 
     it('should be able to create projects when authenticated', function () {
