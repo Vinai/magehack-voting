@@ -64,6 +64,9 @@ votingApp
             this.mayCreateProject = function () {
                 return this.isAuthenticated();
             };
+            this.mayDeleteProject = function (project) {
+                return this.isAuthenticated() && (project.user.id == this.id);
+            };
             this.voteCountForProject = function(project) {
                 var i, count = 0;
                 for (i = 0; i < this.votes.length; i++) {
@@ -145,7 +148,12 @@ votingApp
         var processResponseProject = function (record) {
             var project, user;
 
-            if (user = processResponseUser(record.user)) {
+            if (typeof record.user != 'undefined' && record.user) {
+                user = processResponseUser(record.user)
+            } else if (typeof record.user_id != 'undefined') {
+                user = service.getUserById(record.user_id);
+            }
+            if (user) {
                 removeById(projects, record.id);
                 project = new projectFactory(user);
                 delete record.user;
@@ -302,14 +310,30 @@ votingApp
 
         $scope.projects = service.projects;
         $scope.user = UserSession;
+        $scope.newProject = {};
+        $scope.formErrors = '';
 
-        $scope.addProject = function () {
-            service.createProject({
-                title: $scope.projectTitle,
-                description: $scope.projectDescription,
-                github: '',
-                hangout: ''
-            });
+        $scope.createProject = function () {
+            var valid;
+            $scope.formErrors = '';
+            try {
+                valid = $scope.newProject.title.length > 3;
+                valid = valid && $scope.newProject.description.length > 20; 
+            } catch (e) {
+                $scope.formErrors = 'Please add a title and a description.';
+                valid = false;
+            }
+            if (valid) {
+                delete $scope.newProject.github; // temp fix
+                delete $scope.newProject.hangout; // temp fix
+                service.createProject($scope.newProject);
+                $scope.newProject = {};
+            }
+        }
+        
+        $scope.deleteProject = function(project)
+        {
+            service.deleteProject(project);
         }
 
         $scope.vote = function (project) {

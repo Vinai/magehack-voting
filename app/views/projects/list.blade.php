@@ -15,7 +15,10 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-9">
-                        <h3 class="panel-title">@{{ project.title }}</h3>
+                        <h3 class="panel-title">
+                            @{{ project.title }}
+                            <span ng-show="user.mayDeleteProject(project)" class="glyphicon glyphicon-remove-circle" ng-click="deleteProject(project)"></span>
+                        </h3>
                         <span ng-hide="project.voteCount() == 1">@{{ project.voteCount() }} Votes</span><span
                             ng-show="project.voteCount() == 1">@{{ project.voteCount() }} Vote</span><span
                             ng-show="user.voteCountForProject(project) > 0">, @{{ user.voteCountForProject(project) }} from me</span>
@@ -52,17 +55,20 @@
         <div ng-show="user.mayCreateProject()">
             <h1>Submit Your Own Project:</h1>
         
-            {{ Form::open(array('action' => 'ProjectController@store')) }}
+            <div ng-show="formErrors">@{{ formErrors }}</div>
+            <form ng-submit="createProject()">
             {{ Form::label('title', 'Title:'); }}
-            {{ Form::text('title','', array('class' => 'form-control')); }}
+            {{ Form::text('title','', array('class' => 'form-control', 'ng-model' => 'newProject.title')); }}
             {{ Form::label('description', 'Description:'); }}
-            {{ Form::textarea('description','', array('class' => 'form-control')); }}
+            {{ Form::textarea('description','', array('class' => 'form-control', 'ng-model' => 'newProject.description')); }}
+            <!--
             {{ Form::label('github', 'GitHub:'); }}
-            {{ Form::text('github','', array('class' => 'form-control')); }}
+            {{ Form::text('github','', array('class' => 'form-control', 'ng-model' => 'newProject.github')); }}
             {{ Form::label('hangout', 'Hangout:'); }}
-            {{ Form::text('hangout','', array('class' => 'form-control')); }}
+            {{ Form::text('hangout','', array('class' => 'form-control', 'ng-model' => 'newProject.hangout')); }}
+            -->
             {{ Form::submit('Submit'); }}
-            {{ Form::close() }}
+            </form>
         </div>
     </div>
 </div>
