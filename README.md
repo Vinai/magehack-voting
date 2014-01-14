@@ -1,14 +1,30 @@
 magehack-voting
 ===============
-Install:
-1) composer update
-2) php artisan migrate:refresh
-3) php artisan db:seed
-4) php artisan config:publish artdarek/oauth-4-laravelphp
-5) php artisan clear-compiled
-6) php artisan dump-autoload
-7) php artisan cache:clear
-8) php artisan serve
+
+How to run the app:
+ 
+ - composer update
+ - php artisan migrate:refresh
+ - php artisan db:seed
+ - php artisan serve
+ 
+You will need php5.4 or greater.
+
+
+For seeing the routes available run:
+ 
+```
+$ php artisan routes
+```
+
+To run the JavaScript tests:
+
+```
+$ karma start karma.conf.js
+```
+
+You will need node.js (from nodejs.org) and karma (`npm install -g karma`).  
+The configuration option ```autoWatch: true``` is set, so the tests will be automatically be rerun if one of the files changes.  
 
 add
 

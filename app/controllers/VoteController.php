@@ -20,23 +20,32 @@ class VoteController extends \BaseController
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
 	public function store()
 	{
-		//
+        // Get the current user
+        $user   = Auth::user();
+
+        // Get the Post input values
+        $input  = Input::all();
+
+        // Validate against the model rules
+        $validation = Validator::make($input, Vote::$rules);
+
+        // If validation passes create and return project
+        if ($validation->passes())
+        {
+            $vote = $this->vote->create($input);
+            return $vote;
+        }
+
+        return Redirect::route('projects.index')
+            ->withInput()
+            ->withErrors($validation)
+            ->with('message', 'There were validation errors.');
 	}
 
 	/**
@@ -54,17 +63,6 @@ class VoteController extends \BaseController
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
@@ -72,7 +70,27 @@ class VoteController extends \BaseController
 	 */
 	public function update($id)
 	{
-		//
+        // Get the current user
+        $user   = Auth::user();
+
+        // Get the Post input values
+        $input = array_except(Input::all(), '_method');
+
+        // Validate the input against the project model rules
+        $validation = Validator::make($input, Vote::$rules);
+
+        if ($validation->passes())
+        {
+            $vote = $this->vote->find($id);
+            $vote->update($input);
+
+            return $vote;
+        }
+
+        return Redirect::route('projects.index')
+            ->withInput()
+            ->withErrors($validation)
+            ->with('message', 'There were validation errors.');
 	}
 
 	/**
@@ -83,7 +101,9 @@ class VoteController extends \BaseController
 	 */
 	public function destroy($id)
 	{
-		//
-	}
+        // Delete the vote provided
+        $this->vote->find($id)->delete();
+
+    }
 
 }

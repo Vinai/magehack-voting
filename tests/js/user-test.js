@@ -90,19 +90,9 @@ describe('A mage hackathon participant', function () {
         expect(typeof user.remainingVotes).toBe('function');
     });
 
-    it('should have a vote method', function () {
-        expect(user.vote).toBeDefined();
-        expect(typeof user.vote).toBe('function');
-    });
-
     it('should have a mayUnVote method', function () {
         expect(user.mayUnVote).toBeDefined();
         expect(typeof user.mayUnVote).toBe('function');
-    });
-
-    it('should have a unVote method', function () {
-        expect(user.unVote).toBeDefined();
-        expect(typeof user.unVote).toBe('function');
     });
 
     it('should have a addVote method', function () {
@@ -113,11 +103,6 @@ describe('A mage hackathon participant', function () {
     it('should have a mayCreateProject method', function () {
         expect(user.mayCreateProject).toBeDefined();
         expect(typeof user.mayCreateProject).toBe('function');
-    });
-
-    it('should have a createProject method', function () {
-        expect(user.createProject).toBeDefined();
-        expect(typeof user.createProject).toBe('function');
     });
 
     it('should be able to vote for a project if remaining vote count > 0', function () {
@@ -132,29 +117,32 @@ describe('A mage hackathon participant', function () {
         expect(user.mayVote()).toBe(false);
     });
 
-    it('should decrease the vote count by 1 when voting', function () {
+    it('should decrease the remaining votes by 1 when addVote is called', function () {
+        var vote = { id: '1' };
         var remaining_votes_before = user.remainingVotes();
-        user.vote(project);
+        user.addVote(vote);
 
         expect(user.remainingVotes()).toBe(remaining_votes_before - 1);
     });
 
-    it('should increase the vote count by 1 when taking back a vote', function () {
+    it('should increase the remaining votes by 1 when removeVote is called', function () {
+        var vote = { id: '1' };
         project.removeVote = function () {
             return true;
-        } // stub function
-        user.vote(project);
+        }
+        user.addVote(vote);
         var remaining_votes_before = user.remainingVotes();
 
-        user.unVote(project);
+        user.removeVote(vote);
         expect(user.remainingVotes()).toBe(remaining_votes_before + 1);
     });
 
     it('should be able to take back a vote for a project previously voted for', function () {
+        var vote = { id: '1' };
         project.hasVote = function () {
             return true;
         }
-        user.vote(project);
+        user.addVote(vote);
         expect(user.mayUnVote(project)).toBe(true);
     });
 
