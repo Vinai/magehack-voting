@@ -54,6 +54,8 @@ describe('The mage hackathon votes service', function () {
                     return this.remaining_votes;
                 },
                 addVote: function () {
+                },
+                removeVote: function () {
                 }
             };
             $provide.value('UserSession', user);
@@ -65,8 +67,13 @@ describe('The mage hackathon votes service', function () {
     }));
 
     beforeEach(function () {
-        project = { creator: { id: user.id }, addVote: function () {
-        } };
+        project = {
+            creator: { id: user.id },
+            addVote: function () {
+            },
+            removeVote: function () {
+            }
+        };
     });
 
     beforeEach(function () {
@@ -74,7 +81,7 @@ describe('The mage hackathon votes service', function () {
         var voteProject = {};
         angular.extend(voteUser, user);
         angular.extend(voteProject, project);
-        vote = { user: voteUser, project: voteProject };
+        vote = { id: 1, user: voteUser, project: voteProject };
     });
 
     it('should have a projects property', function () {
@@ -97,9 +104,9 @@ describe('The mage hackathon votes service', function () {
         expect(typeof service.deleteProject).toBe('function');
     });
 
-    it('should have a createVote resource', function () {
-        expect(service.createVote).toBeDefined();
-        expect(typeof service.createVote).toBe('function');
+    it('should have a createVoteForProject resource', function () {
+        expect(service.createVoteForProject).toBeDefined();
+        expect(typeof service.createVoteForProject).toBe('function');
     });
 
     it('should have a deleteVote resource', function () {
@@ -188,23 +195,23 @@ describe('The mage hackathon votes service', function () {
         }).not.toThrow(new Error('Not authorized!'));
     });
 
-    it('should not allow un-authenticated users to call createVote', function () {
+    it('should not allow un-authenticated users to call createVoteForProject', function () {
         user.id = '';
         expect(function () {
-            service.createVote(project)
+            service.createVoteForProject(project)
         }).toThrow(new Error('Not authorized!'));
     });
 
-    it('should allow authenticated users who have remaining votes to call createVote', function () {
+    it('should allow authenticated users who have remaining votes to call createVoteForProject', function () {
         expect(function () {
-            service.createVote(project)
+            service.createVoteForProject(project)
         }).not.toThrow(new Error('Not authorized!'));
     });
 
-    it('should not allow authenticated users who not have remaining votes to call createVote', function () {
+    it('should not allow authenticated users who not have remaining votes to call createVoteForProject', function () {
         user.remaining_votes = 0;
         expect(function () {
-            service.createVote(project)
+            service.createVoteForProject(project)
         }).toThrow(new Error('No votes left!'));
     });
 
@@ -337,8 +344,6 @@ describe('The mage hackathon votes service', function () {
 
     it('should call addVote on the project and the user when createVote is called', inject(function ($httpBackend) {
         data_response_project.votes = [];
-        user.votes = [];
-
         var json_response_getProjects = JSON.stringify([ data_response_project ]);
 
         var vote = angular.extend({}, data_response_vote);
@@ -351,21 +356,33 @@ describe('The mage hackathon votes service', function () {
         $httpBackend.expectPOST('/votes')
             .respond(200, json_response_createVote);
 
-        project.id = data_response_project.id;
-
         spyOn(project, 'addVote');
         spyOn(user, 'addVote');
 
-        service.createVote(project);
+        service.createVoteForProject(project);
 
         $httpBackend.flush();
     }));
 
     it('should call removeVote on the project and the user when deleteVote is called', inject(function ($httpBackend) {
         var json_response_getProjects = JSON.stringify([ data_response_project ]);
+        var data_response_delete = {
+            "id": data_response_vote.id,
+            "success": true
+        };
+        var json_response_deleteVote = JSON.stringify(data_response_delete);
+
         $httpBackend.expectGET('/projects')
             .respond(200, json_response_getProjects);
 
-        
+        $httpBackend.expectDELETE('/votes/' + data_response_vote.id)
+            .respond(200, json_response_deleteVote);
+
+        spyOn(project, 'removeVote');
+        spyOn(user, 'removeVote');
+
+        service.deleteVote(vote);
+
+        $httpBackend.flush();
     }));
 });
