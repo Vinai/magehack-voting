@@ -1,27 +1,128 @@
-{
-    "users": [
-        {
-            "id": "user-id x",
-            "name": "Visible User Name"
-        }
-    ],
-    "projects": [
-        {
-            "id": "project-id x",
-            "creator": "user-id x",
-            "title": "The Project Title",
-            "description": "The Project Description",
-            "github": "https://github.com/magento-hackathon/the-project-name",
-            "hangout": "hangout://whatever-this-looks-like",
-            "created_at": "UNIX timestamp"
-        }
-    ],
-    "votes": [
-        {
-            "id": "vote-id x",
-            "user": "user-id x",
-            "project": "project-id x",
-            "created_at": "UNIX timestamp"
-        }
-    ]
-}
+[
+    {
+        "id":"1",
+        "title":"Shipping rates grid in Magento",
+        "description":"I think it would be nice to have something like this https:\/\/github.com\/thebod\/Thebod_Shippingrates in magento, this modfication of Magento will allow nice and easy managment of shipping rates out of magento box.",
+        "hangout_url":"",
+        "deleted_at":null,
+        "created_at":"2014-01-12 00:00:00",
+        "updated_at":"2014-01-12 00:00:00",
+        "user_id":"1",
+        "user":{
+            "id":"1",
+            "email":"dev@allanmacgregor.com",
+            "firstname":"Allan",
+            "lastname":"MacGregor",
+            "google_accesstoken":"",
+            "is_admin":"0",
+            "deleted_at":null,
+            "created_at":"2014-01-13 22:59:24",
+            "updated_at":"2014-01-13 22:59:24",
+            "avatar_url":"https:\/\/gravatar.com\/avatar\/b64d0da0dffd4028635446e4cfbc0cee?d=https%3A%2F%2Fidenticons.github.com%2Ff7d739ec183780f498552555c6b5ff57.png&r=x",
+            "github_accesstoken":"bfc45da8b286659fef0466201ccf30d21d5bc617",
+            "github_username":"amacgregor",
+            "level":"beginner"
+        },
+        "votes":[
+            {
+                "id":"1",
+                "user_id":"1",
+                "project_id":"1",
+                "created_at":"2014-01-01 00:00:00",
+                "updated_at":"2014-01-01 00:00:00",
+                "user":{
+                    "id":"1",
+                    "email":"dev@allanmacgregor.com",
+                    "firstname":"Allan",
+                    "lastname":"MacGregor",
+                    "google_accesstoken":"",
+                    "is_admin":"0",
+                    "deleted_at":null,
+                    "created_at":"2014-01-13 22:59:24",
+                    "updated_at":"2014-01-13 22:59:24",
+                    "avatar_url":"https:\/\/gravatar.com\/avatar\/b64d0da0dffd4028635446e4cfbc0cee?d=https%3A%2F%2Fidenticons.github.com%2Ff7d739ec183780f498552555c6b5ff57.png&r=x",
+                    "github_accesstoken":"bfc45da8b286659fef0466201ccf30d21d5bc617",
+                    "github_username":"amacgregor",
+                    "level":"beginner"
+                }
+            }
+        ]
+    },
+    {
+        "id":"2",
+        "title":"Real Big Sample Data",
+        "description":"Mainly for performanc research I would like to have a real real big dataset which covers all imaginably performance edge cases. some of them are: * many many categories whith more then 5 levels of depth. lets say 1k+ categories * configurable products with several options ( in the end 1 configurable = 10k+ simples {20\u00d710\u00d74\u00d76\u00d73}) * multiple websites\/stores\/storeviews ( should end in 1k storeviews ) Its ok(and suggested) if it ends in a script, which randomly creates this into files readable by an Importer, as this would speed up the generation and the importer can care in the end of optimize the saving to magento.",
+        "hangout_url":"",
+        "deleted_at":null,
+        "created_at":"2014-01-12 00:00:00",
+        "updated_at":"2014-01-12 00:00:00",
+        "user_id":"1",
+        "user":{
+            "id":"1",
+            "email":"dev@allanmacgregor.com",
+            "firstname":"Allan",
+            "lastname":"MacGregor",
+            "google_accesstoken":"",
+            "is_admin":"0",
+            "deleted_at":null,
+            "created_at":"2014-01-13 22:59:24",
+            "updated_at":"2014-01-13 22:59:24",
+            "avatar_url":"https:\/\/gravatar.com\/avatar\/b64d0da0dffd4028635446e4cfbc0cee?d=https%3A%2F%2Fidenticons.github.com%2Ff7d739ec183780f498552555c6b5ff57.png&r=x",
+            "github_accesstoken":"bfc45da8b286659fef0466201ccf30d21d5bc617",
+            "github_username":"amacgregor",
+            "level":"beginner"
+        },
+        "votes":[
+            {
+                "id":"2",
+                "user_id":"1",
+                "project_id":"2",
+                "created_at":"2014-01-01 00:00:00",
+                "updated_at":"2014-01-01 00:00:00",
+                "user":{
+                    "id":"1",
+                    "email":"dev@allanmacgregor.com",
+                    "firstname":"Allan",
+                    "lastname":"MacGregor",
+                    "google_accesstoken":"",
+                    "is_admin":"0",
+                    "deleted_at":null,
+                    "created_at":"2014-01-13 22:59:24",
+                    "updated_at":"2014-01-13 22:59:24",
+                    "avatar_url":"https:\/\/gravatar.com\/avatar\/b64d0da0dffd4028635446e4cfbc0cee?d=https%3A%2F%2Fidenticons.github.com%2Ff7d739ec183780f498552555c6b5ff57.png&r=x",
+                    "github_accesstoken":"bfc45da8b286659fef0466201ccf30d21d5bc617",
+                    "github_username":"amacgregor",
+                    "level":"beginner"
+                }
+            }
+        ]
+    },
+    {
+        "id":"3",
+        "title":"Implement Module for prediction.io",
+        "description":"There is a service called http:\/\/prediction.io\/ which targets on predicting user behaviors. Could be very interesting for recommendation backend",
+        "hangout_url":"",
+        "deleted_at":null,
+        "created_at":"2014-01-12 00:00:00",
+        "updated_at":"2014-01-12 00:00:00",
+        "user_id":"1",
+        "user":{
+            "id":"1",
+            "email":"dev@allanmacgregor.com",
+            "firstname":"Allan",
+            "lastname":"MacGregor",
+            "google_accesstoken":"",
+            "is_admin":"0",
+            "deleted_at":null,
+            "created_at":"2014-01-13 22:59:24",
+            "updated_at":"2014-01-13 22:59:24",
+            "avatar_url":"https:\/\/gravatar.com\/avatar\/b64d0da0dffd4028635446e4cfbc0cee?d=https%3A%2F%2Fidenticons.github.com%2Ff7d739ec183780f498552555c6b5ff57.png&r=x",
+            "github_accesstoken":"bfc45da8b286659fef0466201ccf30d21d5bc617",
+            "github_username":"amacgregor",
+            "level":"beginner"
+        },
+        "votes":[
+
+        ]
+    }
+]

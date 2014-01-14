@@ -1,12 +1,11 @@
 <?php
 
-class ProjectController extends \BaseController
+class UserController extends \BaseController
 {
-    public function __construct(Project $project)
+    public function __construct(User $user)
     {
-        $this->project = $project;
+        $this->user = $user;
     }
-
 
 	/**
 	 * Display a listing of the resource.
@@ -15,12 +14,12 @@ class ProjectController extends \BaseController
 	 */
 	public function index()
 	{
-        $project = Project::with('user')
-            ->with('votes.user')
+        $user = User::with('projects')
+            ->with('votes')
             ->get();
 
-        return $project;
-    }
+        return $user;
+	}
 
 	/**
 	 * Show the form for creating a new resource.
@@ -39,24 +38,7 @@ class ProjectController extends \BaseController
 	 */
 	public function store()
 	{
-        $user = Auth::user();
-
-        $input = Input::all();
-        $validation = Validator::make($input, Project::$rules);
-
-        if ($validation->passes())
-        {
-            $input['user_id'] = $user->id;
-            $input['hangout_url'] = '';
-            $project = $this->project->create($input);
-
-            return $project;
-        }
-
-        return Redirect::route('projects.index')
-            ->withInput()
-            ->withErrors($validation)
-            ->with('message', 'There were validation errors.');
+		//
 	}
 
 	/**
@@ -67,14 +49,13 @@ class ProjectController extends \BaseController
 	 */
 	public function show($id)
 	{
-        $project = Project::where('id','=',$id)
-            ->with('user')
+        $user = User::where('id','=',$id)
+            ->with('projects')
             ->with('votes')
             ->first();
 
-        return $project;
-
-    }
+        return $user;
+	}
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -108,4 +89,5 @@ class ProjectController extends \BaseController
 	{
 		//
 	}
+
 }

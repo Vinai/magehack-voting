@@ -1,7 +1,7 @@
 <?php
 
 class Project extends Eloquent {
-	protected $guarded = array();
+	protected $guarded = array('id');
     protected $softDelete = true;
 
 	public static $rules = array();

@@ -1,5 +1,7 @@
 {
-    "vote-id": "vote-id x",
-    "project-id": "project-id x",
-    "user-id": "user-id x"
+    "id":"1",
+    "user_id":"1",
+    "project_id":"1",
+    "created_at":"2014-01-01 00:00:00",
+    "updated_at":"2014-01-01 00:00:00"
 }
