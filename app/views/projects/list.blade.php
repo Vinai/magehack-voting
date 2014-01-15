@@ -10,8 +10,26 @@
         array_flip(array('id', 'firstname', 'lastname', 'is_admin', 'github_username', 'max_votes', 'avatar_url'))
     ) ?>
     <mage-hack-votes-init><?php echo json_encode($initData) ?></mage-hack-votes-init>
+    
     <div class="projects-container" ng-controller="ProjectsController">
-        <div class="panel panel-default project" ng-repeat="project in projects">
+
+        <div>
+            Sort by
+            <a href="" class="btn btn-default" title="Sort by date" ng-click="sorting='id'">
+                <span ng-show="sorting!='id'"><span class="glyphicon"></span> Date</span> 
+                <span ng-show="sorting=='id'"><span class="glyphicon glyphicon-ok"></span> Date</span>  
+            </a>
+            <a href="" class="btn btn-default" title="Sort by votes" ng-click="sorting='votes.length'">
+                <span ng-show="sorting!='votes.length'"><span class="glyphicon"></span> Votes</span> 
+                <span ng-show="sorting=='votes.length'"><span class="glyphicon glyphicon-ok"></span> Votes</span>  
+            </a>
+            <a href="" class="btn btn-default" title="Reverse sort" ng-click="sort_reverse=!sort_reverse">
+                <span ng-show="sort_reverse"><span class="glyphicon glyphicon-arrow-down"></span> Direction</span> 
+                <span ng-hide="sort_reverse"><span class="glyphicon glyphicon-arrow-up"></span> Direction</span>  
+            </a>
+        </div>
+        
+        <div class="panel panel-default project" ng-repeat="project in projects | orderBy:sorting:sort_reverse">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-9">
@@ -52,9 +70,9 @@
                 <p ng-show="project.edit_mode">
                     {{ Form::textarea('description','', array('class' => 'form-control', 'ng-model' => 'project.description')); }}
                 </p>
-                <p ng-show="(project.github || project.hangout_url) && ! project.edit_mode">
-                    <div ng-show="project.github">GitHub Repository: <a href="@{{ project.github }}">@{{ project.github }}</a></div>
-                    <div ng-show="project.hangout_url">Google Hangout: <a href="@{{ project.hangout_url }}">@{{ project.hangout_url }}</a></div>
+                <p>
+                    <div ng-show="project.github && !project.edit_mode">GitHub Repository: <a href="@{{ project.github }}">@{{ project.github }}</a></div>
+                    <div ng-show="project.hangout_url && !project.edit_mode">Google Hangout: <a href="@{{ project.hangout_url }}">@{{ project.hangout_url }}</a></div>
                 </p>
                 <p ng-show="project.edit_mode">
                     <!--

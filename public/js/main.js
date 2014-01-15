@@ -315,6 +315,8 @@ votingApp
         var backups = [];
 
         $scope.projects = service.projects;
+        $scope.sorting = 'id';
+        $scope.sort_reverse = false;
         $scope.user = UserSession;
         $scope.newProject = {};
         $scope.formErrors = '';
