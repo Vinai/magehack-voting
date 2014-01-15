@@ -54,7 +54,7 @@ class UserController extends \BaseController
 
         if ($validation->passes())
         {
-            $user = $this->user->update($input);
+            $user = $this->user->update($input)->first();
 
             return $user;
         }
