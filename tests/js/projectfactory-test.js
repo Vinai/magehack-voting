@@ -44,9 +44,9 @@ describe('A mage hackathon project', function () {
         expect(typeof project.github).toBe('string');
     });
 
-    it('should have a hangout', function () {
-        expect(project.hangout).toBeDefined();
-        expect(typeof project.hangout).toBe('string');
+    it('should have a hangout_url', function () {
+        expect(project.hangout_url).toBeDefined();
+        expect(typeof project.hangout_url).toBe('string');
     });
 
     it('should have a created-at timestamp', function () {
@@ -78,24 +78,6 @@ describe('A mage hackathon project', function () {
     it('should have a removeVote method', function () {
         expect(project.removeVote).toBeDefined();
         expect(typeof project.removeVote).toBe('function');
-    });
-
-    it('should have a isEditable method', function () {
-        expect(project.isEditable).toBeDefined();
-        expect(typeof project.isEditable).toBe('function');
-    });
-
-    it('should be editable by creator', function () {
-        expect(project.isEditable(user)).toBe(true);
-    });
-    it('should be editable by admin who is not the creator', function () {
-        var admin = { is_admin: true, id: (user.id + 1) };
-        expect(project.isEditable(admin)).toBe(true);
-    });
-
-    it('should not be editable by a regular user who is not the creator', function () {
-        var not_creator = { is_admin: false, id: (user.id + 1) };
-        expect(project.isEditable(not_creator)).toBe(false);
     });
 
     it('should have one more vote after addVote was called', function () {

@@ -27,6 +27,7 @@ describe('A mage hackathon participant', function () {
     beforeEach(function () {
         project = {
             id: '1',
+            creator: angular.extend({}, user),
             addVote: function () {
             },
             removeVote: function () {
@@ -112,6 +113,16 @@ describe('A mage hackathon participant', function () {
         expect(typeof user.mayCreateProject).toBe('function');
     });
 
+    it('should have a mayDeleteProject method', function () {
+        expect(user.mayDeleteProject).toBeDefined();
+        expect(typeof user.mayDeleteProject).toBe('function');
+    });
+
+    it('should have a mayEditProject method', function () {
+        expect(user.mayEditProject).toBeDefined();
+        expect(typeof user.mayEditProject).toBe('function');
+    });
+
     it('should have a voteCountForProject method', function () {
         expect(user.voteCountForProject).toBeDefined();
         expect(typeof user.voteCountForProject).toBe('function');
@@ -178,23 +189,44 @@ describe('A mage hackathon participant', function () {
     });
     
     it('should be able to delete a project he created when authenticated', function() {
-        project.creator = user;
         expect(user.mayDeleteProject(project)).toBe(true);
     });
     
     it('should not be able to delete a project he did not create it', function() {
-        project.creator = { id: user.id + '1' };
+        project.creator.id = user.id + '1';
         expect(user.mayDeleteProject(project)).toBe(false);
     });
     
     it('should not be able to delete a project if not authenticated', function() {
-        project.creator = { id: user.id };
         user.id = '';
         expect(user.mayDeleteProject(project)).toBe(false);
     });
     
+    it('should be able to edit projects he created', function() {
+        expect(user.mayEditProject(project)).toBe(true);
+    });
+    
+    it('should not be able to edit projects he did not created', function() {
+        project.creator.id = user.id + '1';
+        expect(user.mayEditProject(project)).toBe(false);
+    });
+    
+    it('if admin should be able to edit projects he did not created', function() {
+        user.is_admin = true;
+        
+        expect(user.mayEditProject(project)).toBe(true);
+
+        project.creator.id = user.id + '1';
+        expect(user.mayEditProject(project)).toBe(true);
+    });
+    
+    it('if not authenticated should not be able to edit projects', function() {
+        user.id = '';
+        expect(user.mayEditProject(project)).toBe(false);
+    });
+    
     it('should be able to delete a project if he is an admin', function() {
-        project.creator = { id: user.id + '1' };
+        project.creator.id = user.id + '1';
         user.is_admin = true;
         expect(user.mayDeleteProject(project)).toBe(true);
     });

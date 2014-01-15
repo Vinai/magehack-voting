@@ -4,15 +4,16 @@ var votingApp = angular.module('magehack-voting', []);
 votingApp.value('initData', {});
 
 votingApp
-    .directive('mageHackVotesInit', function(initData) {
+    .directive('mageHackVotesInit', function (initData) {
         return {
             restrict: 'E',
-            link: function(scope, elements, attrs) {
+            link: function (scope, elements, attrs) {
                 var data = {};
                 try {
                     data = eval('(' + elements[0].innerHTML + ')');
                     elements[0].innerHTML = '';
-                } catch (e) {}
+                } catch (e) {
+                }
                 angular.extend(initData, data);
             }
         }
@@ -67,7 +68,13 @@ votingApp
             this.mayDeleteProject = function (project) {
                 return this.isAuthenticated() && (project.creator.id == this.id || this.is_admin);
             };
-            this.voteCountForProject = function(project) {
+            this.mayEditProject = function (project) {
+                if (this.is_admin) {
+                    return true;
+                }
+                return project.creator.id == this.id;
+            }
+            this.voteCountForProject = function (project) {
                 var i, count = 0;
                 for (i = 0; i < this.votes.length; i++) {
                     if (this.votes[i].project.id == project.id)
@@ -84,7 +91,7 @@ votingApp
             this.title = '';
             this.description = '';
             this.github = '';
-            this.hangout = '';
+            this.hangout_url = '';
             this.created_at = new Date();
             this.votes = [];
             this.voteCount = function () {
@@ -105,12 +112,6 @@ votingApp
                 }
                 return false;
             };
-            this.isEditable = function (user) {
-                if (user.is_admin) {
-                    return true;
-                }
-                return this.creator.id == user.id;
-            }
         }
     })
     .factory('VoteFactory', function () {
@@ -232,7 +233,13 @@ votingApp
                 if (session.id != project.creator.id && !session.is_admin) {
                     throw new Error('Not authorized!');
                 }
-                transport.put('/projects/' + project.id, project)
+                // no votes n' stuff
+                var update = {
+                    id: project.id,
+                    title: project.title,
+                    description: project.description
+                };
+                transport.put('/projects/' + update.id, update)
                     .success(function (response) {
                         processResponseProject(response);
                     })
@@ -247,7 +254,7 @@ votingApp
                 transport.delete('/projects/' + project.id, project)
                     .success(function (response) {
                         // todo: check for response.success == true etc...
-                        angular.forEach(project.votes, function(vote) {
+                        angular.forEach(project.votes, function (vote) {
                             removeById(votes, vote.id);
                             removeById(session.votes, vote.id);
                         });
@@ -266,7 +273,7 @@ votingApp
                 }
                 transport.post('/votes', {'project_id': project.id})
                     .success(function (response) {
-                        if (!response.user_id && ! response.user) {
+                        if (!response.user_id && !response.user) {
                             response.user_id = session.user_id;
                         }
                         processResponseVote(response);
@@ -302,9 +309,10 @@ votingApp
 
         return service;
     })
-    .controller('ProjectsController', function ($scope, Service, UserSession) {
+    .controller('ProjectsController', function ($scope, Service, UserSession, ProjectFactory) {
 
         var service = Service;
+        var backups = [];
 
         $scope.projects = service.projects;
         $scope.user = UserSession;
@@ -316,22 +324,37 @@ votingApp
             $scope.formErrors = '';
             try {
                 valid = $scope.newProject.title.length > 3;
-                valid = valid && $scope.newProject.description.length > 20; 
+                valid = valid && $scope.newProject.description.length > 20;
             } catch (e) {
                 $scope.formErrors = 'Please add a title and a description.';
                 valid = false;
             }
             if (valid) {
                 delete $scope.newProject.github; // temp fix
-                delete $scope.newProject.hangout; // temp fix
                 service.createProject($scope.newProject);
                 $scope.newProject = {};
             }
         }
-        
-        $scope.deleteProject = function(project)
-        {
-            service.deleteProject(project);
+
+        $scope.deleteProject = function (project) {
+            if (confirm('Are you sure you want to delete the project?'))
+                service.deleteProject(project);
+        }
+
+        $scope.startEdit = function (project) {
+            backups[parseInt(project.id)] = angular.extend({}, project, {edit_mode: false});
+            project.edit_mode = true;
+        }
+
+        $scope.cancelEdit = function (project) {
+            var id = parseInt(project.id);
+            angular.extend(project, backups[id]);
+            delete backups[id];
+        }
+
+        $scope.saveEdit = function (project) {
+            delete backups[parseInt(project.id)];
+            service.updateProject(project);
         }
 
         $scope.vote = function (project) {
@@ -346,7 +369,8 @@ votingApp
                     service.deleteVote(vote);
                     break;
                 }
-            };
+            }
+            ;
         }
     });
 ;
