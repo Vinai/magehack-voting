@@ -57,8 +57,10 @@ describe('The mage hackathon votes service', function () {
                 addVote: function () {
                 },
                 removeVote: function () {
+                },
+                mayDeleteProject: function () {
                 }
-            };
+            }
             $provide.value('UserSession', user);
         });
     });
@@ -169,28 +171,28 @@ describe('The mage hackathon votes service', function () {
     });
 
     it('should not allow un-authenticated users to call deleteProject', function () {
-        user.id = '';
+        user.mayDeleteProject = function() { return false; }
         expect(function () {
             service.deleteProject(project)
         }).toThrow(new Error('Not authorized!'));
     });
 
     it('should not allow authenticated users that are not the creator to call deleteProject', function () {
-        project.creator = user.id + '1';
+        user.mayDeleteProject = function() { return false; }
         expect(function () {
             service.deleteProject(project)
         }).toThrow(new Error('Not authorized!'));
     });
 
     it('should not allow authenticated users that are the creator to call deleteProject', function () {
+        user.mayDeleteProject = function() { return false; }
         expect(function () {
             service.deleteProject(project)
         }).toThrow(new Error('Not authorized!'));
     });
 
     it('should allow admins to call deleteProject', function () {
-        user.id = '';
-        user.is_admin = true;
+        user.mayDeleteProject = function() { return true; }
         expect(function () {
             service.deleteProject(project)
         }).not.toThrow(new Error('Not authorized!'));
@@ -317,6 +319,7 @@ describe('The mage hackathon votes service', function () {
     }));
 
     it('should remove a project when deleteProject is called by an admin', inject(function ($httpBackend) {
+        user.mayDeleteProject = function() { return true; }
         user.is_admin = true;
         var json_response_getProjects = JSON.stringify([ data_response_project ]);
         var data_delete_project = {

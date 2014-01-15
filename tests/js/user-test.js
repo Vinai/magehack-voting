@@ -177,20 +177,26 @@ describe('A mage hackathon participant', function () {
         expect(user.mayCreateProject()).toBe(true);
     });
     
-    it('should be able to delete a project it created when authenticated', function() {
-        project.user = user;
+    it('should be able to delete a project he created when authenticated', function() {
+        project.creator = user;
         expect(user.mayDeleteProject(project)).toBe(true);
     });
     
-    it('should not be able to delete a project it did not create it', function() {
-        project.user = { id: user.id + '1' };
+    it('should not be able to delete a project he did not create it', function() {
+        project.creator = { id: user.id + '1' };
         expect(user.mayDeleteProject(project)).toBe(false);
     });
     
     it('should not be able to delete a project if not authenticated', function() {
-        project.user = { id: user.id };
+        project.creator = { id: user.id };
         user.id = '';
         expect(user.mayDeleteProject(project)).toBe(false);
+    });
+    
+    it('should be able to delete a project if he is an admin', function() {
+        project.creator = { id: user.id + '1' };
+        user.is_admin = true;
+        expect(user.mayDeleteProject(project)).toBe(true);
     });
 
     it('should not be able to create projects when not authenticated', function () {

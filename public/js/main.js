@@ -65,7 +65,7 @@ votingApp
                 return this.isAuthenticated();
             };
             this.mayDeleteProject = function (project) {
-                return this.isAuthenticated() && (project.user.id == this.id);
+                return this.isAuthenticated() && (project.creator.id == this.id || this.is_admin);
             };
             this.voteCountForProject = function(project) {
                 var i, count = 0;
@@ -241,9 +241,7 @@ votingApp
                     });
             },
             deleteProject: function (project) {
-                var authorized = session.is_admin;
-                //authorized = authorized || session.id == project.creator;
-                if (!authorized) {
+                if (!session.mayDeleteProject(project)) {
                     throw new Error('Not authorized!');
                 }
                 transport.delete('/projects/' + project.id, project)
