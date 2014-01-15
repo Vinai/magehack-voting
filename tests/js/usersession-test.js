@@ -1,4 +1,4 @@
-describe('The mage hackathon votes user', function () {
+describe('The current mage hackathon votes user', function () {
 
     var session, init_data = null;
 

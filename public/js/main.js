@@ -36,13 +36,16 @@ votingApp
             this.isAuthenticated = function () {
                 return this.id != '' && this.github_username != '';
             };
-            this.mayVote = function () {
-                return this.isAuthenticated() && this.remainingVotes() > 0;
-            };
             this.remainingVotes = function () {
                 return this.max_votes - this.votes.length;
             };
+            this.mayVote = function () {
+                return this.voting_enabled && this.isAuthenticated() && this.remainingVotes() > 0;
+            };
             this.mayUnvote = function (project) {
+                if (! this.voting_enabled) {
+                    return false;
+                }
                 var i;
                 for (i = this.votes.length - 1; i >= 0; i--) {
                     if (project.hasVote(this.votes[i])) {
@@ -265,6 +268,9 @@ votingApp
                     });
             },
             createVoteForProject: function (project) {
+                if (!session.voting_enabled) {
+                    throw new Error('Voting disabled!');
+                }
                 if (!session.isAuthenticated()) {
                     throw new Error('Not authorized!');
                 }

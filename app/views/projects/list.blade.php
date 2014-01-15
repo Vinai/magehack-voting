@@ -9,11 +9,12 @@
         (Auth::check() ? Auth::user()->getAttributes() : array('id' => '')),
         array_flip(array('id', 'firstname', 'lastname', 'is_admin', 'github_username', 'max_votes', 'avatar_url'))
     ) ?>
+    <?php $initData['voting_enabled'] = true ?>
     <mage-hack-votes-init><?php echo json_encode($initData) ?></mage-hack-votes-init>
     
     <div class="projects-container" ng-controller="ProjectsController">
 
-        <div>
+        <div class="sorting-box">
             Sort by
             <a href="" class="btn btn-default" title="Sort by date" ng-click="sorting='id'">
                 <span ng-show="sorting!='id'"><span class="glyphicon"></span> Date</span> 
@@ -87,7 +88,7 @@
                 <ul class="participants">
                     <li ng-repeat="vote in project.votes">
                         <a>
-                            <img ng-if="vote.user.avatar_url" height="40" src="@{{ vote.user.avatar_url }}" width="40" title="@{{  vote.user.github_username  }}"/>
+                            <img ng-if="vote.user.avatar_url" height="40" ng-src="@{{ vote.user.avatar_url }}" width="40" title="@{{  vote.user.github_username  }}"/>
                         </a>
                     </li>
                 </ul>

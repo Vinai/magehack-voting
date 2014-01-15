@@ -48,6 +48,7 @@ describe('The mage hackathon votes service', function () {
                 github_username: "test",
                 is_admin: false,
                 remaining_votes: 2,
+                voting_enabled: true,
                 isAuthenticated: function () {
                     return this.id != '';
                 },

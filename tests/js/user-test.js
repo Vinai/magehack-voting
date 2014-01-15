@@ -21,6 +21,7 @@ describe('A mage hackathon participant', function () {
         user = new UserFactory();
         user.id = '1';
         user.github_username = 'test';
+        user.voting_enabled = true;
     }));
 
     // stub Project
@@ -131,6 +132,11 @@ describe('A mage hackathon participant', function () {
     it('should be able to vote for a project if remaining vote count > 0', function () {
         expect(user.remainingVotes()).toBeGreaterThan(0);
         expect(user.mayVote()).toBe(true);
+    });
+
+    it('should not be able to vote for a project if voting is disabled', function () {
+        user.voting_enabled = false;
+        expect(user.mayVote()).toBe(false);
     });
 
     it('should not be able to vote for a project if remaining vote count == 0', function () {
