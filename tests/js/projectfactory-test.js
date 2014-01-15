@@ -40,8 +40,8 @@ describe('A mage hackathon project', function () {
     });
 
     it('should have a github URL', function () {
-        expect(project.github).toBeDefined();
-        expect(typeof project.github).toBe('string');
+        expect(project.github_url).toBeDefined();
+        expect(typeof project.github_url).toBe('string');
     });
 
     it('should have a hangout_url', function () {

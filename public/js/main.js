@@ -90,7 +90,7 @@ votingApp
             this.creator = creator;
             this.title = '';
             this.description = '';
-            this.github = '';
+            this.github_url = '';
             this.hangout_url = '';
             this.created_at = new Date();
             this.votes = [];
@@ -332,7 +332,7 @@ votingApp
                 valid = false;
             }
             if (valid) {
-                delete $scope.newProject.github; // temp fix
+                delete $scope.newProject.github_url; // temp fix
                 service.createProject($scope.newProject);
                 $scope.newProject = {};
             }

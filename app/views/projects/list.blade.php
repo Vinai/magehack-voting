@@ -71,13 +71,13 @@
                     {{ Form::textarea('description','', array('class' => 'form-control', 'ng-model' => 'project.description')); }}
                 </p>
                 <p>
-                    <div ng-show="project.github && !project.edit_mode">GitHub Repository: <a href="@{{ project.github }}">@{{ project.github }}</a></div>
+                    <div ng-show="project.github_url && !project.edit_mode">GitHub Repository: <a href="@{{ project.github_url }}">@{{ project.github_url }}</a></div>
                     <div ng-show="project.hangout_url && !project.edit_mode">Google Hangout: <a href="@{{ project.hangout_url }}">@{{ project.hangout_url }}</a></div>
                 </p>
                 <p ng-show="project.edit_mode">
                     <!--
-                    {{ Form::label('github', 'GitHub:'); }}
-                    {{ Form::text('github','', array('class' => 'form-control', 'ng-model' => 'project.github')); }}
+                    {{ Form::label('github_url', 'GitHub:'); }}
+                    {{ Form::text('github_url','', array('class' => 'form-control', 'ng-model' => 'project.github_url')); }}
                     -->
                     {{ Form::label('hangout_url', 'Hangout:'); }}
                     {{ Form::text('hangout_url','', array('class' => 'form-control', 'ng-model' => 'project.hangout_url')); }}
@@ -103,8 +103,8 @@
             {{ Form::label('description', 'Description:'); }}
             {{ Form::textarea('description','', array('class' => 'form-control', 'ng-model' => 'newProject.description')); }}
             <!--
-            {{ Form::label('github', 'GitHub:'); }}
-            {{ Form::text('github','', array('class' => 'form-control', 'ng-model' => 'newProject.github')); }}
+            {{ Form::label('github_url', 'GitHub:'); }}
+            {{ Form::text('github_url','', array('class' => 'form-control', 'ng-model' => 'newProject.github_url')); }}
             -->
             {{ Form::label('hangout_url', 'Hangout:'); }}
             {{ Form::text('hangout_url','', array('class' => 'form-control', 'ng-model' => 'newProject.hangout_url')); }}
