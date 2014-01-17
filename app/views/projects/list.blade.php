@@ -28,9 +28,10 @@
                 <span ng-show="sort_reverse"><span class="glyphicon glyphicon-arrow-down"></span> Direction</span> 
                 <span ng-hide="sort_reverse"><span class="glyphicon glyphicon-arrow-up"></span> Direction</span>  
             </a>
+            <input ng-model="searchText"/> Search
         </div>
         
-        <div class="panel panel-default project" ng-repeat="project in projects | orderBy:sorting:sort_reverse">
+        <div class="panel panel-default project" ng-repeat="project in projects | orderBy:sorting:sort_reverse | filter:searchTitleAndDescription:false ">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-9">

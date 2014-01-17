@@ -326,6 +326,23 @@ votingApp
         $scope.user = UserSession;
         $scope.newProject = {};
         $scope.formErrors = '';
+        $scope.searchText = '';
+        
+        // Filter to match title OR description
+        // This is different from filtering {title: searchText, description: searchText}
+        $scope.searchTitleAndDescription = function(project) {
+            var s = $scope.searchText;
+            if ('' === s) {
+                return true;
+            }
+            else if (project.title.search(s) != -1) {
+                return true;
+            }
+            else if (project.description.search(s) != -1) {
+                return true;
+            }
+            return false;
+        }
 
         $scope.createProject = function () {
             var valid;
