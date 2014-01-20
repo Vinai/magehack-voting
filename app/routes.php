@@ -14,7 +14,7 @@
 // Create restful controllers only available for authenticated users
 Route::group(array('before'=>'auth'), function() {
     Route::resource('projects', 'ProjectController');
-    Route::resource('users', 'UserController');
+//    Route::resource('users', 'UserController');
     Route::resource('votes', 'VoteController');
 });
 
