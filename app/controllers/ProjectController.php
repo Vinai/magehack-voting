@@ -15,8 +15,15 @@ class ProjectController extends \BaseController
     public function index()
 	{
         // Get all projects and load the owner and the votes with their corresponding users.
-        $project = Project::with('user')
-            ->with('votes.user')
+        $project = Project::with(array('user'=>function($query){
+                $query->select('id','firstname','lastname','is_admin','avatar_url','github_username');
+            }))
+            ->with(array('votes'=>function($query){
+                    $query->select('id','user_id','project_id','created_at','updated_at')
+                        ->with(array('user'=>function($query){
+                            $query->select('id','firstname','lastname','is_admin','avatar_url','github_username');
+                        }));
+                }))
             ->get();
 
         return $project;
@@ -42,7 +49,6 @@ class ProjectController extends \BaseController
         if ($validation->passes())
         {
             $input['user_id'] = $user->id;
-            $input['hangout_url'] = '';
             $project = $this->project->create($input);
 
             return $project;
@@ -64,7 +70,9 @@ class ProjectController extends \BaseController
 	{
         // Get the requested project by id with the user and vote models
         $project = Project::where('id','=',$id)
-            ->with('user')
+            ->with(array('user'=>function($query){
+                    $query->select('id','firstname','lastname','is_admin','avatar_url','github_username');
+                }))
             ->with('votes')
             ->first();
 
