@@ -115,6 +115,17 @@ votingApp
                 }
                 return false;
             };
+            this.isValid = function(attr) {
+                var titleValid = this.title && (this.title.length > 3);
+                var descValid = this.description && (this.description.length > 20);
+                if ('title' == attr) {
+                    return titleValid;
+                } else if ('description' == attr) {
+                    return descValid;
+                } else {
+                    return titleValid && descValid;
+                }
+            }
         }
     })
     .factory('VoteFactory', function () {
@@ -318,13 +329,14 @@ votingApp
     .controller('ProjectsController', function ($scope, Service, UserSession, ProjectFactory) {
 
         var service = Service;
+        var projectFactory = ProjectFactory;
         var backups = [];
 
         $scope.projects = service.projects;
         $scope.sorting = 'id';
         $scope.sort_reverse = false;
         $scope.user = UserSession;
-        $scope.newProject = {};
+        $scope.newProject = angular.extend({}, new projectFactory(UserSession));
         $scope.formErrors = '';
         $scope.searchText = '';
         
@@ -335,29 +347,23 @@ votingApp
             if ('' === s) {
                 return true;
             }
-            else if (project.title.search(s) != -1) {
+            else if (project.title.toLowerCase().search(s.toLowerCase()) != -1) {
                 return true;
             }
-            else if (project.description.search(s) != -1) {
+            else if (project.description.toLowerCase().search(s.toLowerCase()) != -1) {
                 return true;
             }
             return false;
         }
 
         $scope.createProject = function () {
-            var valid;
             $scope.formErrors = '';
-            try {
-                valid = $scope.newProject.title.length > 3;
-                valid = valid && $scope.newProject.description.length > 20;
-            } catch (e) {
+            if (! $scope.newProject.isValid()) {
                 $scope.formErrors = 'Please add a title and a description.';
-                valid = false;
-            }
-            if (valid) {
-                delete $scope.newProject.github_url; // temp fix
+            } else {
+                //delete $scope.newProject.github_url; // temp fix
                 service.createProject($scope.newProject);
-                $scope.newProject = {};
+                $scope.newProject = angular.extend({}, new projectFactory(UserSession));
             }
         }
 
@@ -378,8 +384,10 @@ votingApp
         }
 
         $scope.saveEdit = function (project) {
-            delete backups[parseInt(project.id)];
-            service.updateProject(project);
+            if (project.isValid()) {
+                delete backups[parseInt(project.id)];
+                service.updateProject(project);
+            }
         }
 
         $scope.vote = function (project) {

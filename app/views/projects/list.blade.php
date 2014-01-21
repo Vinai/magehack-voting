@@ -25,10 +25,10 @@
                 <span ng-show="sorting=='votes.length'"><span class="glyphicon glyphicon-ok"></span> Votes</span>  
             </a>
             <a href="" class="btn btn-default" title="Reverse sort" ng-click="sort_reverse=!sort_reverse">
-                <span ng-show="sort_reverse"><span class="glyphicon glyphicon-arrow-down"></span> Direction</span> 
-                <span ng-hide="sort_reverse"><span class="glyphicon glyphicon-arrow-up"></span> Direction</span>  
+                <span ng-show="sort_reverse"><span class="glyphicon glyphicon-circle-arrow-down"></span> Direction</span> 
+                <span ng-hide="sort_reverse"><span class="glyphicon glyphicon-circle-arrow-up"></span> Direction</span>  
             </a>
-            <input ng-model="searchText"/> Search
+            <input ng-model="searchText"/> <span class="glyphicon glyphicon-search"></span>
         </div>
         
         <div class="panel panel-default project" ng-repeat="project in projects | orderBy:sorting:sort_reverse | filter:searchTitleAndDescription:false ">
@@ -61,7 +61,9 @@
                             <span class="glyphicon glyphicon-minus-sign"></span> Cancel
                         </a>
                         <a href="" class="btn btn-default"  title="Save" ng-click="saveEdit(project)">
-                            <span class="glyphicon glyphicon-save"></span> Save
+                            <span class="glyphicon glyphicon-save" ng-show="project.isValid()"></span>
+                            <span class="glyphicon glyphicon-exclamation-sign" ng-hide="project.isValid()"></span>
+                            Save
                         </a>
                     </div>
                     @endif
@@ -77,10 +79,8 @@
                     <div ng-show="project.hangout_url && !project.edit_mode">Google Hangout: <a href="@{{ project.hangout_url }}">@{{ project.hangout_url }}</a></div>
                 </p>
                 <p ng-show="project.edit_mode">
-                    <!--
                     {{ Form::label('github_url', 'GitHub:'); }}
                     {{ Form::text('github_url','', array('class' => 'form-control', 'ng-model' => 'project.github_url')); }}
-                    -->
                     {{ Form::label('hangout_url', 'Hangout:'); }}
                     {{ Form::text('hangout_url','', array('class' => 'form-control', 'ng-model' => 'project.hangout_url')); }}
                 </p>
@@ -98,18 +98,20 @@
         <div ng-show="user.mayCreateProject()">
             <h1>Submit Your Own Project:</h1>
         
-            <div ng-show="formErrors">@{{ formErrors }}</div>
-            <form ng-submit="createProject()">
+            <div class="error-msgs" ng-show="formErrors">@{{ formErrors }}</div>
+            <form ng-submit="createProject()" name="project" novalidate="">
             {{ Form::label('title', 'Title:'); }}
+                <span class="glyphicon glyphicon-exclamation-sign" ng-hide="!newProject.title || newProject.isValid('title')"></span>
+                <span class="glyphicon glyphicon-ok-sign" ng-show="newProject.isValid('title')"></span>
             {{ Form::text('title','', array('class' => 'form-control', 'ng-model' => 'newProject.title')); }}
             {{ Form::label('description', 'Description:'); }}
+                <span class="glyphicon glyphicon-exclamation-sign" ng-hide="!newProject.description || newProject.isValid('description')"></span>
+                <span class="glyphicon glyphicon-ok-sign" ng-show="newProject.isValid('description')"></span>
             {{ Form::textarea('description','', array('class' => 'form-control', 'ng-model' => 'newProject.description')); }}
-            <!--
             {{ Form::label('github_url', 'GitHub:'); }}
-            {{ Form::text('github_url','', array('class' => 'form-control', 'ng-model' => 'newProject.github_url')); }}
-            -->
+            {{ Form::url('github_url','', array('class' => 'form-control', 'ng-model' => 'newProject.github_url')); }}
             {{ Form::label('hangout_url', 'Hangout:'); }}
-            {{ Form::text('hangout_url','', array('class' => 'form-control', 'ng-model' => 'newProject.hangout_url')); }}
+            {{ Form::url('hangout_url','', array('class' => 'form-control', 'ng-model' => 'newProject.hangout_url')); }}
             {{ Form::submit('Submit'); }}
             </form>
         </div>

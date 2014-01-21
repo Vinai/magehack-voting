@@ -102,4 +102,54 @@ describe('A mage hackathon project', function () {
         vote.user = {};
         expect(project.hasVote(vote)).toBeFalsy();
     });
+
+    it('should have a isValid method', function () {
+        expect(project.isValid).toBeDefined();
+        expect(typeof project.isValid).toBe('function');
+    });
+
+    it('should return true for isValid(\'title\') if the title is longer then 3 characters', function () {
+        project.title = '1234';
+        expect(project.isValid('title')).toBeTruthy();
+    });
+
+    it('should return false for isValid(\'title\') if the title is shorter then 4 characters', function () {
+        project.title = '123';
+        expect(project.isValid('title')).toBeFalsy();
+    });
+
+    it('should return true for isValid(\'description\') if the description is longer then 20 characters', function () {
+        project.description = '123456789012345678901';
+        expect(project.isValid('description')).toBeTruthy();
+    });
+
+    it('should return false for isValid(\'description\') if the description is shorter then 21 characters', function () {
+        project.description = '12345678901234567890';
+        expect(project.isValid('description')).toBeFalsy();
+    });
+
+    it('should return true for isValid() if the description and title are valid', function () {
+        project.title = '1234';
+        project.description = '123456789012345678901';
+        expect(project.isValid()).toBeTruthy();
+    });
+
+    it('should return false for isValid() if the description is invalid and title is valid', function () {
+        project.title = '1234';
+        project.description = '12345678901234567890';
+        expect(project.isValid()).toBeFalsy();
+    });
+
+    it('should return false for isValid() if the description is valid and title is invalid', function () {
+        project.title = '123';
+        project.description = '123456789012345678901';
+        expect(project.isValid()).toBeFalsy();
+    });
+
+    it('should return false for isValid() if the description and title are invalid', function () {
+        project.title = '123';
+        project.description = '12345678901234567890';
+        expect(project.isValid()).toBeFalsy();
+    });
+    
 });
