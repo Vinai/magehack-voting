@@ -45,6 +45,7 @@
                             <span ng-show="project.voteCount() == 1">@{{ project.voteCount() }} Vote</span>
                             <span ng-show="user.voteCountForProject(project) > 0">(@{{ user.voteCountForProject(project) }} from me)</span>
                         </span>
+                        @{{ project.errTitle }}
                         {{ Form::text('title','', array('class' => 'form-control', 'ng-model' => 'project.title', 'ng-show' => 'project.edit_mode')); }}
                     </div>
                     @if(Auth::check())
@@ -72,6 +73,7 @@
             <div class="panel-body">
                 <p class="whitespace-pre" ng-hide="project.edit_mode">@{{ project.description }}</p>
                 <p ng-show="project.edit_mode">
+                    @{{ project.errDescription }}
                     {{ Form::textarea('description','', array('class' => 'form-control', 'ng-model' => 'project.description')); }}
                 </p>
                 <p>

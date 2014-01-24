@@ -235,12 +235,14 @@ votingApp
                 if (!session.isAuthenticated() && !session.is_admin) {
                     throw new Error('Not authorized!');
                 }
+                //delete project.github_url;
+                //delete project.hangout_url;
                 transport.post('/projects', project)
                     .success(function (response) {
                         processResponseProject(response);
                     })
                     .error(function (response, status) {
-                        alert("Error: " + status);
+                        alert("Error: " + status + "\n" + response.message);
                     });
             },
             updateProject: function (project) {
@@ -251,14 +253,16 @@ votingApp
                 var update = {
                     id: project.id,
                     title: project.title,
-                    description: project.description
+                    description: project.description,
+                    hangout_url: project.hangout_url,
+                    github_url: project.github_url
                 };
                 transport.put('/projects/' + update.id, update)
                     .success(function (response) {
                         processResponseProject(response);
                     })
                     .error(function (response, status) {
-                        alert("Error: " + status);
+                        alert("Error: " + status + "\n" + response.message);
                     });
             },
             deleteProject: function (project) {
@@ -275,7 +279,7 @@ votingApp
                         removeById(projects, project.id);
                     })
                     .error(function (response, status) {
-                        alert("Error: " + status);
+                        alert("Error: " + status + "\n" + response.message);
                     });
             },
             createVoteForProject: function (project) {
@@ -296,7 +300,7 @@ votingApp
                         processResponseVote(response);
                     })
                     .error(function (response, status) {
-                        alert("Error: " + status);
+                        alert("Error: " + status + "\n" + response.message);
                     });
             },
             deleteVote: function (vote) {
@@ -319,7 +323,7 @@ votingApp
                         removeById(votes, vote.id);
                     })
                     .error(function (response, status) {
-                        alert("Error: " + status);
+                        alert("Error: " + status + "\n" + response.message);
                     });
             }
         };
@@ -361,7 +365,6 @@ votingApp
             if (! $scope.newProject.isValid()) {
                 $scope.formErrors = 'Please add a title and a description.';
             } else {
-                //delete $scope.newProject.github_url; // temp fix
                 service.createProject($scope.newProject);
                 $scope.newProject = angular.extend({}, new projectFactory(UserSession));
             }
@@ -384,7 +387,16 @@ votingApp
         }
 
         $scope.saveEdit = function (project) {
-            if (project.isValid()) {
+            project.errTitle = '';
+            project.errDescription = '';
+            if (!project.isValid()) {
+                if (! project.isValid('title')) {
+                    project.errTitle = 'The title is to short.'
+                }
+                if (! project.isValid('description')) {
+                    project.errDescription = 'The description is to short.'
+                }
+            } else {
                 delete backups[parseInt(project.id)];
                 service.updateProject(project);
             }
