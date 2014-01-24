@@ -9,7 +9,7 @@
         (Auth::check() ? Auth::user()->getAttributes() : array('id' => '')),
         array_flip(array('id', 'firstname', 'lastname', 'is_admin', 'github_username', 'max_votes', 'avatar_url'))
     ) ?>
-    <?php $initData['voting_enabled'] = true ?>
+    <?php $initData['voting_enabled'] = Config::get('settings.voting') ?>
     <mage-hack-votes-init><?php echo json_encode($initData) ?></mage-hack-votes-init>
     
     <div class="projects-container" ng-controller="ProjectsController">
