@@ -235,9 +235,14 @@ votingApp
                 if (!session.isAuthenticated() && !session.is_admin) {
                     throw new Error('Not authorized!');
                 }
-                //delete project.github_url;
-                //delete project.hangout_url;
-                transport.post('/projects', project)
+                // no votes n' stuff
+                var data = {
+                    title: project.title,
+                    description: project.description,
+                    hangout_url: project.hangout_url,
+                    github_url: project.github_url
+                };
+                transport.post('/projects', data)
                     .success(function (response) {
                         processResponseProject(response);
                     })
