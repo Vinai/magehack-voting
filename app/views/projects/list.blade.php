@@ -57,7 +57,7 @@
                             <span class="glyphicon glyphicon-thumbs-down"></span> Unvote
                         </a>
                     </div>
-                        @if(Auth::user->id == project.user.id )
+                        @if(Auth::user()->id == project.user.id )
                         <div class="col-md-3 a-right" ng-show="project.edit_mode">
                             <a href="" class="btn btn-default" title="Cancel" ng-click="cancelEdit(project)">
                                 <span class="glyphicon glyphicon-minus-sign"></span> Cancel
