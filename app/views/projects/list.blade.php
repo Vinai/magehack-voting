@@ -36,6 +36,7 @@
                 <div class="row">
                     <div class="col-md-9">
                         <span ng-hide="project.edit_mode">
+                            <!--img class="creator-gravatar" ng-if="project.creator.avatar_url" ng-src="@{{ project.creator.avatar_url }}" title="@{{  project.creator.github_username  }}"/-->
                             <h3 class="panel-title">
                                 @{{ project.title }}
                                 <span ng-show="user.mayEditProject(project)" title="Edit" class="glyphicon glyphicon-edit" ng-click="startEdit(project)"></span>
