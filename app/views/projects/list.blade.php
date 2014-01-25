@@ -57,18 +57,16 @@
                             <span class="glyphicon glyphicon-thumbs-down"></span> Unvote
                         </a>
                     </div>
-                        @if(Auth::user->id == project.user.id )
-                        <div class="col-md-3 a-right" ng-show="project.edit_mode">
-                            <a href="" class="btn btn-default" title="Cancel" ng-click="cancelEdit(project)">
-                                <span class="glyphicon glyphicon-minus-sign"></span> Cancel
-                            </a>
-                            <a href="" class="btn btn-default"  title="Save" ng-click="saveEdit(project)">
-                                <span class="glyphicon glyphicon-save" ng-show="project.isValid()"></span>
-                                <span class="glyphicon glyphicon-exclamation-sign" ng-hide="project.isValid()"></span>
-                                Save
-                            </a>
-                        </div>
-                        @endif
+                    <div class="col-md-3 a-right" ng-show="project.edit_mode">
+                        <a href="" class="btn btn-default" title="Cancel" ng-click="cancelEdit(project)">
+                            <span class="glyphicon glyphicon-minus-sign"></span> Cancel
+                        </a>
+                        <a href="" class="btn btn-default"  title="Save" ng-click="saveEdit(project)">
+                            <span class="glyphicon glyphicon-save" ng-show="project.isValid()"></span>
+                            <span class="glyphicon glyphicon-exclamation-sign" ng-hide="project.isValid()"></span>
+                            Save
+                        </a>
+                    </div>
                     @endif
                 </div>
             </div>
