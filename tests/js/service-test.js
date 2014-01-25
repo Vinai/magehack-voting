@@ -391,18 +391,35 @@ describe('The mage hackathon votes service', function () {
         $httpBackend.flush();
     }));
     
-    it('should not return a user with the wrong id when getUserById is called', inject(function ($httpBackend, UserSession) {
-        var project2 = angular.copy(data_response_project);
-        project2.id = 2;
-        project2.user.id = '2';
+    it('should not return a user with the wrong id when getUserById is called', inject(function ($httpBackend) {
+        // different project with different user, so two users are known to service
+        var data_response_project2 = angular.copy(data_response_project);
+        data_response_project2.id = '2';
+        data_response_project2.user.id = '2';
 
-        var json_response_getProjects = JSON.stringify([ data_response_project, project2 ]);
+        var json_response_getProjects = JSON.stringify([ data_response_project, data_response_project2 ]);
         $httpBackend.expectGET('/projects')
             .respond(200, json_response_getProjects);
         $httpBackend.flush();
         
-        expect(service.getUserById(1).id).toBe('1');
-        expect(service.getUserById(2).id).toBe('2');
+        var id1 = user.id;
+        var id2 = data_response_project2.user.id;
         
+        expect(service.getUserById(id1).id).toBe(id1);
+        expect(service.getUserById(id2).id).toBe(id2);
+    }));
+    
+    it('should return false for when getUserById is called with an non-existent user id', inject(function ($httpBackend) {
+        var json_response_getProjects = JSON.stringify([ data_response_project ]);
+        $httpBackend.expectGET('/projects')
+            .respond(200, json_response_getProjects);
+        $httpBackend.flush();
+        
+        var invalid_id1 = 2;
+        var invalid_id2 = '1 foo';
+        
+        expect(service.getUserById(user.id)).not.toBe(false); // valid user id
+        expect(service.getUserById(invalid_id1)).toBe(false); // non-existent user id
+        expect(service.getUserById(invalid_id2)).toBe(false); // invalid user id
     }));
 });
