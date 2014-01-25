@@ -72,10 +72,7 @@ votingApp
                 return this.isAuthenticated() && (project.creator.id == this.id || this.is_admin);
             };
             this.mayEditProject = function (project) {
-                if (this.is_admin) {
-                    return true;
-                }
-                return project.creator.id == this.id;
+                return this.isAuthenticated() && (project.creator.id == this.id || this.is_admin);
             }
             this.voteCountForProject = function (project) {
                 var i, count = 0;
