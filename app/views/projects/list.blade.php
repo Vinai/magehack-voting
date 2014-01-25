@@ -41,8 +41,12 @@
                             @endif
                             <h3 class="panel-title">
                                 @{{ project.title }}
-                                <span ng-show="user.mayEditProject(project)" title="Edit" class="glyphicon glyphicon-edit" ng-click="startEdit(project)"></span>
-                                <span ng-show="user.mayDeleteProject(project)" title="Delete" class="glyphicon glyphicon-remove-circle" ng-click="deleteProject(project)"></span>
+                                <a href="" ng-show="user.mayEditProject(project)" title="Edit" >
+                                    <span class="glyphicon glyphicon-edit" ng-click="startEdit(project)"></span>
+                                </a>
+                                <a href="" ng-show="user.mayDeleteProject(project)" title="Delete">
+                                    <span class="glyphicon glyphicon-remove-circle" ng-click="deleteProject(project)"></span>
+                                </a>
                             </h3>
                             <span ng-hide="project.voteCount() == 1">@{{ project.voteCount() }} Votes</span>
                             <span ng-show="project.voteCount() == 1">@{{ project.voteCount() }} Vote</span>
