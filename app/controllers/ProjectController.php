@@ -100,7 +100,7 @@ class ProjectController extends \BaseController
         {
             $project = $this->project
                 ->where('id', '=', $id)
-                ->where('user_id', '=', $user->id)
+                //->where('user_id', '=', $user->id)
                 ->with('user')
                 ->with('votes')
                 ->first();
