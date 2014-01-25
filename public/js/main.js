@@ -213,7 +213,7 @@ votingApp
         var service = {
             projects: projects,
             getUserById: function (user_id) {
-                if (user_id = session.id) {
+                if (user_id == session.id) {
                     return session;
                 }
                 for (var i = 0; i < users.length; i++) {

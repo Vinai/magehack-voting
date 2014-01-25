@@ -390,4 +390,19 @@ describe('The mage hackathon votes service', function () {
 
         $httpBackend.flush();
     }));
+    
+    it('should not return a user with the wrong id when getUserById is called', inject(function ($httpBackend, UserSession) {
+        var project2 = angular.copy(data_response_project);
+        project2.id = 2;
+        project2.user.id = '2';
+
+        var json_response_getProjects = JSON.stringify([ data_response_project, project2 ]);
+        $httpBackend.expectGET('/projects')
+            .respond(200, json_response_getProjects);
+        $httpBackend.flush();
+        
+        expect(service.getUserById(1).id).toBe('1');
+        expect(service.getUserById(2).id).toBe('2');
+        
+    }));
 });
