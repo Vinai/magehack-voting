@@ -36,7 +36,9 @@
                 <div class="row">
                     <div class="col-md-9">
                         <span ng-hide="project.edit_mode">
-                            <!--img class="creator-gravatar" ng-if="project.creator.avatar_url" ng-src="@{{ project.creator.avatar_url }}" title="@{{  project.creator.github_username  }}"/-->
+                            @if(Config::get('settings.creator-gravatar-show'))
+                            <img class="creator-gravatar" ng-if="project.creator.avatar_url" ng-src="@{{ project.creator.avatar_url }}" title="@{{  project.creator.github_username  }}">
+                            @endif
                             <h3 class="panel-title">
                                 @{{ project.title }}
                                 <span ng-show="user.mayEditProject(project)" title="Edit" class="glyphicon glyphicon-edit" ng-click="startEdit(project)"></span>
@@ -88,7 +90,8 @@
                     {{ Form::text('hangout_url','', array('class' => 'form-control', 'ng-model' => 'project.hangout_url')); }}
                 </p>
             </div>
-            <!--div class="panel-heading panel-participants">
+            @if(Config::get('settings.participants-gravatar-show'))
+            <div class="panel-heading panel-participants">
                 <ul class="participants">
                     <li ng-repeat="vote in project.votes">
                         <a>
@@ -96,7 +99,8 @@
                         </a>
                     </li>
                 </ul>
-            </div-->
+            </div>
+            @endif
         </div>
         <div ng-show="user.mayCreateProject()">
             <h1>Submit Your Own Project:</h1>
