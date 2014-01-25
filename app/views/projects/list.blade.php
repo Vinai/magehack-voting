@@ -87,7 +87,7 @@
                     {{ Form::text('hangout_url','', array('class' => 'form-control', 'ng-model' => 'project.hangout_url')); }}
                 </p>
             </div>
-            <div class="panel-heading panel-participants">
+            <!--div class="panel-heading panel-participants">
                 <ul class="participants">
                     <li ng-repeat="vote in project.votes">
                         <a>
@@ -95,7 +95,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div-->
         </div>
         <div ng-show="user.mayCreateProject()">
             <h1>Submit Your Own Project:</h1>
