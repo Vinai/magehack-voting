@@ -41,7 +41,7 @@ class OauthController extends BaseController {
 
                 $user->email        = (isset($result['email']) ? $result['email'] :  $result['login'].'@corehack.de');
                 $user->firstname    = $name[0];
-                $user->lastname     = $name[1];
+                $user->lastname     = (isset($name[1]) ? $name[1] : '');
                 $user->avatar_url   = (isset($result['avatar_url']) ? $result['avatar_url'] : 'https://gravatar.com/avatar/371cd989d5a0857c5cd9186982137afb?d=https%3A%2F%2Fidenticons.github.com%2Fe0584e9afe8a5c979e4ea6df9dcfe8d2.png&r=x');
 
                 $user->github_username    = $result['login'];
